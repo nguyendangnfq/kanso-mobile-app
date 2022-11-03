@@ -24,7 +24,7 @@ const PokeCard: React.FC<PokeCardProps> = props => {
 
   return (
     <View style={styles.cardContainer}>
-      <Text style={styles.textId}>{data.id}</Text>
+      <Text style={styles.textId}>#{String(data.id).padStart(3, '0')}</Text>
       <Image
         source={{ uri: data?.sprites?.other.home.front_default }}
         style={styles.image}

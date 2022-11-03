@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Image, Text, FlatList, StyleSheet } from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  FlatList,
+} from 'react-native';
 import { instance } from '../services/api';
 
 type DetailProps = {
@@ -14,7 +21,7 @@ const Detail: React.FC<DetailProps> = (props: any) => {
   const { route } = props;
   const data = route.params;
 
-  console.log(value);
+  const imageSrc = require('../assets/bg.png');
 
   React.useEffect(() => {
     const fetchByID = async () => {
@@ -28,7 +35,7 @@ const Detail: React.FC<DetailProps> = (props: any) => {
   }, []);
 
   return (
-    <View style={styles.mainDetails}>
+    <ImageBackground style={styles.mainDetails} source={imageSrc}>
       <Text style={styles.mainText}>{data.name.toUpperCase()}</Text>
       <Image
         source={{ uri: value?.sprites?.other.home.front_default }}
@@ -36,22 +43,29 @@ const Detail: React.FC<DetailProps> = (props: any) => {
         resizeMode="contain"
       />
 
-      {/* <FlatList
-        columnWrapperStyle={styles.types}
-        data={types}
-        numColumns={2}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={[styles[item.name], styles.type]}>
-            <Text style={styles.typeText}>{item.name}</Text>
-          </View>
-        )}
-      /> */}
+      <View style={styles.stats}>
+        <Text style={styles.statText}>Base Stats</Text>
+
+        <FlatList
+          columnWrapperStyle={styles.types}
+          data={value.stats}
+          numColumns={2}
+          // keyExtractor={item => item?.slot.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.skills}>
+              <Text style={styles.skillTitleText}>
+                {item?.stat.name.toUpperCase()}
+              </Text>
+              <Text>{item?.base_stat}</Text>
+            </View>
+          )}
+        />
+      </View>
 
       {/* <View style={styles.description}>
         <Text>{description}</Text>
       </View> */}
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -61,6 +75,7 @@ const styles = StyleSheet.create({
   mainDetails: {
     padding: 30,
     alignItems: 'center',
+    flex: 1,
   },
   image: {
     width: '100%',
@@ -70,6 +85,24 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  stats: {
+    marginTop: 20,
+    justifyContent: 'center',
+  },
+  statText: {
+    textAlign: 'center',
+    fontWeight: '800',
+    fontSize: 24,
+  },
+  skills: {
+    width: 150,
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  skillTitleText: {
+    color: '#c03028',
+    fontSize: 13,
   },
   description: {
     marginTop: 20,
