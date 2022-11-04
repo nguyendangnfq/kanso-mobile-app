@@ -12,7 +12,6 @@ const Home = ({ navigation }: any) => {
   const loading = useAppSelector(state => state.pokemon.originalState.loading);
 
   const handleDetailPage = (value: any) => {
-    console.log(value);
     navigation.navigate('Detail', value);
   };
 

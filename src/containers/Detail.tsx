@@ -8,6 +8,7 @@ import {
   FlatList,
 } from 'react-native';
 import { instance } from '../services/api';
+import * as Progress from 'react-native-progress';
 
 type DetailProps = {
   name: string;
@@ -37,6 +38,7 @@ const Detail: React.FC<DetailProps> = (props: any) => {
   return (
     <ImageBackground style={styles.mainDetails} source={imageSrc}>
       <Text style={styles.mainText}>{data.name.toUpperCase()}</Text>
+
       <Image
         source={{ uri: value?.sprites?.other.home.front_default }}
         style={styles.image}
@@ -50,21 +52,20 @@ const Detail: React.FC<DetailProps> = (props: any) => {
           columnWrapperStyle={styles.types}
           data={value.stats}
           numColumns={2}
-          // keyExtractor={item => item?.slot.toString()}
           renderItem={({ item }) => (
-            <View style={styles.skills}>
-              <Text style={styles.skillTitleText}>
-                {item?.stat.name.toUpperCase()}
-              </Text>
-              <Text>{item?.base_stat}</Text>
+            <View style={{ marginBottom: 5 }}>
+              <View style={styles.skills}>
+                <Text style={styles.skillTitleText}>
+                  {item?.stat.name.toUpperCase()}
+                </Text>
+              </View>
+              <View>
+                <Progress.Bar progress={item.base_stat / 100} width={200} />
+              </View>
             </View>
           )}
         />
       </View>
-
-      {/* <View style={styles.description}>
-        <Text>{description}</Text>
-      </View> */}
     </ImageBackground>
   );
 };
@@ -94,22 +95,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '800',
     fontSize: 24,
+    marginBottom: 20,
   },
   skills: {
-    width: 150,
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    width: '100%',
+    // alignItems: 'flex-start',
   },
   skillTitleText: {
     color: '#c03028',
     fontSize: 13,
+    marginBottom: 5,
   },
   description: {
     marginTop: 20,
   },
   types: {
-    flexDirection: 'row',
-    marginTop: 20,
+    flexDirection: 'column',
   },
   type: {
     padding: 5,
