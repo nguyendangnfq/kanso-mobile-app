@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View, FlatList, Pressable } from 'react-native';
-import { PokeLoader } from '../components';
+import { DropDownCustom, PokeLoader } from '../components';
 import PokeCard from '../components/PokeCard';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllPokemon } from '../store/pokemon/pokemonSlice';
@@ -29,6 +29,7 @@ const Home = ({ navigation }: any) => {
 
   return (
     <View style={styles.container}>
+      <DropDownCustom />
       {loading && <PokeLoader />}
       {!loading && allPokemonData.length !== 0 && (
         <FlatList

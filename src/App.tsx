@@ -4,6 +4,7 @@ import ApplicationNavigator from './navigators/Application';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import './translations';
 
 export default function App() {
   return (
