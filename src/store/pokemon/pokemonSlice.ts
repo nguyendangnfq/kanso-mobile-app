@@ -88,17 +88,6 @@ const pokemonSlice = createSlice({
       .addCase(fetchPokemonSpeciesById.rejected, state => {
         state.originalState.loading = false;
       });
-
-    // .addCase(fetchPokemonSpeciesById.fulfilled, (state, action) => {
-    //   const { flavor_text_entries } = action.payload;
-
-    //   let getDescription = (entries: any) => {
-    //     return entries.find((item: any) => item.language.name === 'en')
-    //       .flavor_text;
-    //   };
-
-    //   state.originalState.description = getDescription(flavor_text_entries);
-    // });
   },
 });
 

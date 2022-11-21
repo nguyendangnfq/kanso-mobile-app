@@ -3,7 +3,7 @@ import { StyleSheet, View, FlatList, Pressable } from 'react-native';
 import { DropDownCustom, PokeLoader } from '../components';
 import PokeCard from '../components/PokeCard';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchAllPokemon } from '../store/pokemon/pokemonSlice';
+import { fetchAllPokemon, PokemonState } from '../store/pokemon/pokemonSlice';
 
 const Home = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
@@ -36,7 +36,7 @@ const Home = ({ navigation }: any) => {
           data={allPokemonData}
           renderItem={renderItem}
           initialNumToRender={0}
-          keyExtractor={item => item.name}
+          keyExtractor={(item: PokemonState) => item.name}
         />
       )}
     </View>
