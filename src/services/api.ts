@@ -6,3 +6,10 @@ export const instance = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+export const secondInstance = axios.create({
+  baseURL: 'http://localhost:4000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});

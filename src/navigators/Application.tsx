@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './utils';
 import MainNavigator from './Main';
-import { Detail } from '../containers';
+import { Detail, Login, Register } from '../containers';
 
 const Stack = createStackNavigator();
 
@@ -14,6 +14,22 @@ const ApplicationNavigator = () => {
       <StatusBar />
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              animationEnabled: false,
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{
+              animationEnabled: false,
+              headerShown: false,
+            }}
+          />
           <Stack.Screen
             name="Main"
             component={MainNavigator}
