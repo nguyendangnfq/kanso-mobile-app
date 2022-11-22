@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import pokemonReducer from './pokemon/pokemonSlice';
-
+import loginReducer from './user/loginSlice';
 export const store = configureStore({
   reducer: {
     pokemon: pokemonReducer,
+    login: loginReducer,
   },
 });
 

@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "react-devtools": "react-devtools"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
@@ -16,7 +17,7 @@
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/stack": "^6.3.3",
     "@reduxjs/toolkit": "^1.8.6",
-    "axios": "0.27.2",
+    "axios": "0.24.0",
     "i18next": "^22.0.4",
     "react": "18.1.0",
     "react-i18next": "^12.0.0",

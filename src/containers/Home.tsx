@@ -4,6 +4,7 @@ import { DropDownCustom, PokeLoader } from '../components';
 import PokeCard from '../components/PokeCard';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllPokemon, PokemonState } from '../store/pokemon/pokemonSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
@@ -14,6 +15,22 @@ const Home = ({ navigation }: any) => {
   const handleDetailPage = (value: any) => {
     navigation.navigate('Detail', value);
   };
+
+  useEffect(() => {
+    const getAccessToken = async () => {
+      try {
+        let item = await AsyncStorage.getItem('access_token');
+        if (item) {
+          console.log(JSON.parse(item));
+          return JSON.parse(item);
+        }
+        return null;
+      } catch (error) {
+        return null;
+      }
+    };
+    getAccessToken();
+  }, []);
 
   const renderItem = React.useCallback(({ item }: any) => {
     return (

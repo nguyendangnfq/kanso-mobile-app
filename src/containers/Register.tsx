@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
 import Background from '../components/Background';
-import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
@@ -10,9 +9,13 @@ import { theme } from '../theme/theme';
 import { emailValidator } from '../helpers/emailValidator';
 import { passwordValidator } from '../helpers/passwordValidator';
 import { nameValidator } from '../helpers/nameValidator';
+import { phoneValidator } from '../helpers/phoneValidator';
+import { displayNameValidator } from '../helpers/displayNameValidator';
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState({ value: '', error: '' });
+  const [phone, setPhone] = useState({ value: '', error: '' });
+  const [displayName, setDisplayName] = useState({ value: '', error: '' });
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 
@@ -20,23 +23,46 @@ export default function RegisterScreen({ navigation }) {
     const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
-    if (emailError || passwordError || nameError) {
+    const phoneError = phoneValidator(phone.value);
+    const displayNameError = displayNameValidator(displayName.value);
+    if (
+      emailError ||
+      passwordError ||
+      nameError ||
+      phoneError ||
+      displayNameError
+    ) {
       setName({ ...name, error: nameError });
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
+      setPhone({ ...phone, error: phoneError });
+      setDisplayName({ ...displayName, error: displayNameError });
       return;
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
-    });
+
+    const account = {
+      user_name: name.value,
+      email: email.value,
+      password: password.value,
+      avatar: '',
+      display_name: displayName.value,
+      phone: phone.value,
+      bio: '',
+      company: '',
+      address: '',
+    };
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: 'Dashboard' }],
+    // });
+    console.log(account);
   };
 
   return (
     <Background>
       <Header>Create Account</Header>
       <TextInput
-        label="Name"
+        label="Username"
         returnKeyType="next"
         value={name.value}
         onChangeText={(text: any) => setName({ value: text, error: '' })}
@@ -63,6 +89,22 @@ export default function RegisterScreen({ navigation }) {
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
+      />
+      <TextInput
+        label="Phone"
+        returnKeyType="next"
+        value={phone.value}
+        onChangeText={(text: any) => setPhone({ value: text, error: '' })}
+        error={!!phone.error}
+        errorText={phone.error}
+      />
+      <TextInput
+        label="Display Name"
+        returnKeyType="next"
+        value={displayName.value}
+        onChangeText={(text: any) => setDisplayName({ value: text, error: '' })}
+        error={!!displayName.error}
+        errorText={displayName.error}
       />
       <Button
         mode="contained"

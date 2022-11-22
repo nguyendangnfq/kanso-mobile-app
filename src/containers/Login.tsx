@@ -8,10 +8,14 @@ import TextInput from '../components/TextInput';
 import { theme } from '../theme/theme';
 import { nameValidator } from '../helpers/nameValidator';
 import { passwordValidator } from '../helpers/passwordValidator';
+import { useAppDispatch } from './../store/hooks';
+import { login } from '../store/user/loginSlice';
 
 export default function LoginScreen({ navigation }) {
   const [name, setName] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
+
+  const dispatch = useAppDispatch();
 
   const onLoginPressed = () => {
     const emailError = nameValidator(name.value);
@@ -21,13 +25,15 @@ export default function LoginScreen({ navigation }) {
       setPassword({ ...password, error: passwordError });
       return;
     }
-    console.log(name.value);
-    console.log(password.value);
 
-    // navigation.replace({
-    //   index: 0,
-    //   routes: [{ name: 'Dashboard' }],
-    // });
+    const dataLogin = {
+      user_name: name.value,
+      password: password.value,
+    };
+    console.log(dataLogin);
+    dispatch(login(dataLogin));
+
+    navigation.replace('Main');
   };
 
   return (

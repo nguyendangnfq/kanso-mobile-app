@@ -8,8 +8,9 @@ export const instance = axios.create({
 });
 
 export const secondInstance = axios.create({
-  baseURL: 'http://localhost:4000',
+  baseURL: 'https://servernckh.herokuapp.com',
   headers: {
     'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
 });
