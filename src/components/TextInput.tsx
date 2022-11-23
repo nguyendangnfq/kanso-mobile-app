@@ -3,7 +3,23 @@ import { View, StyleSheet, Text } from 'react-native';
 import { TextInput as Input } from 'react-native-paper';
 import { theme } from '../theme/theme';
 
-export default function TextInput({ errorText, description, ...props }) {
+type TextInputProps = {
+  error?: any;
+  errorText?: string;
+  description?: string;
+  label: string;
+  returnKeyType?: any;
+  value: any;
+  autoCapitalize?: any;
+  autoCompleteType?: any;
+  onChangeText?: (value: any) => void;
+};
+
+export default function TextInput({
+  errorText,
+  description,
+  ...props
+}: TextInputProps) {
   return (
     <View style={styles.container}>
       <Input

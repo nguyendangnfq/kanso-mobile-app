@@ -1,10 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import pokemonReducer from './pokemon/pokemonSlice';
 import loginReducer from './user/loginSlice';
+import registerReducer from './user/registerSlice';
+import userSettingReducer from './user/userSettingSlice';
+
 export const store = configureStore({
   reducer: {
     pokemon: pokemonReducer,
     login: loginReducer,
+    register: registerReducer,
+    userSetting: userSettingReducer,
   },
 });
 

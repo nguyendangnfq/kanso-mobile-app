@@ -1,35 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, FlatList, Pressable } from 'react-native';
 import { DropDownCustom, PokeLoader } from '../components';
 import PokeCard from '../components/PokeCard';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchAllPokemon, PokemonState } from '../store/pokemon/pokemonSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { listUserInfo } from '../store/user/userSettingSlice';
 
 const Home = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
+
   const allPokemonData = useAppSelector(state => state.pokemon.allPokeState);
 
-  const loading = useAppSelector(state => state.pokemon.originalState.loading);
+  const token = useAppSelector(state => state.login.token);
+  const loading = useAppSelector(state => state.userSetting.loading);
+  const profile = useAppSelector(state => state?.userSetting);
+  console.log(profile);
 
   const handleDetailPage = (value: any) => {
     navigation.navigate('Detail', value);
   };
 
   useEffect(() => {
-    const getAccessToken = async () => {
-      try {
-        let item = await AsyncStorage.getItem('access_token');
-        if (item) {
-          console.log(JSON.parse(item));
-          return JSON.parse(item);
-        }
-        return null;
-      } catch (error) {
-        return null;
-      }
-    };
-    getAccessToken();
+    dispatch(fetchAllPokemon());
+    dispatch(listUserInfo(token));
   }, []);
 
   const renderItem = React.useCallback(({ item }: any) => {
@@ -40,13 +34,9 @@ const Home = ({ navigation }: any) => {
     );
   }, []);
 
-  useEffect(() => {
-    dispatch(fetchAllPokemon());
-  }, []);
-
   return (
     <View style={styles.container}>
-      <DropDownCustom />
+      {/* <DropDownCustom /> */}
       {loading && <PokeLoader />}
       {!loading && allPokemonData.length !== 0 && (
         <FlatList

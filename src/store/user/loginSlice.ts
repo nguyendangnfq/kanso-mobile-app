@@ -9,10 +9,12 @@ export const login = createAsyncThunk('user/login', async (params: any) => {
 
 export type LoginState = {
   loading: boolean;
+  token: string;
 };
 
 const initialState: LoginState = {
   loading: false,
+  token: '',
 };
 
 export const LoginSlice = createSlice({
@@ -29,7 +31,7 @@ export const LoginSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
+        state.token = action.payload.id;
         const setStorage = async () => {
           try {
             await AsyncStorage.setItem(
