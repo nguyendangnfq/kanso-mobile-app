@@ -8,7 +8,7 @@ import { useAppDispatch } from './../store/hooks';
 import { login } from '../store/user/loginSlice';
 import { Background, Button, Header, TextInput } from '../components';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation }: any) {
   const [name, setName] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 

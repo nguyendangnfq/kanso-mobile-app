@@ -9,6 +9,8 @@ type TextInputProps = {
   description?: string;
   label: string;
   returnKeyType?: any;
+  textContentType?: string;
+  keyboardType?: string;
   value: any;
   autoCapitalize?: any;
   autoCompleteType?: any;

@@ -1,6 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import {
   Background,
   Button,
@@ -20,15 +19,10 @@ const UserSetting = () => {
   const [displayName, setDisplayName] = useState({ value: '', error: '' });
   const [email, setEmail] = useState({ value: '', error: '' });
 
-  const dispatch = useAppDispatch();
-  const token = useAppSelector(state => state.login.token);
   const profile = useAppSelector(state => state?.userSetting);
   const loading = useAppSelector(state => state.userSetting.loading);
 
   console.log(profile);
-  useEffect(() => {
-    dispatch(listUserInfo(token));
-  }, []);
 
   const onSignUpPressed = async () => {
     try {
@@ -112,6 +106,5 @@ export default UserSetting;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 100,
   },
 });

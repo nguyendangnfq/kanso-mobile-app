@@ -4,7 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './utils';
 import MainNavigator from './Main';
-import { Detail, Login, Register } from '../containers';
+import { Board, Login, Register } from '../containers';
+import { ProjectForm } from '../components';
 
 const Stack = createStackNavigator();
 
@@ -38,7 +39,8 @@ const ApplicationNavigator = () => {
               headerShown: false,
             }}
           />
-          <Stack.Screen name="Detail" component={Detail} />
+          <Stack.Screen name="ProjectForm" component={ProjectForm} />
+          <Stack.Screen name="Board" component={Board} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

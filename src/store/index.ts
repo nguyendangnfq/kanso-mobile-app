@@ -3,6 +3,8 @@ import pokemonReducer from './pokemon/pokemonSlice';
 import loginReducer from './user/loginSlice';
 import registerReducer from './user/registerSlice';
 import userSettingReducer from './user/userSettingSlice';
+import projectReducer from './project/projectSlice';
+import boardReducer from './board/boardSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     login: loginReducer,
     register: registerReducer,
     userSetting: userSettingReducer,
+    project: projectReducer,
+    board: boardReducer,
   },
 });
 

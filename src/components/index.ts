@@ -5,3 +5,5 @@ export { default as TextInput } from './TextInput';
 export { default as Background } from './Background';
 export { default as Header } from './Header';
 export { default as Logo } from './Logo';
+export { default as TodoCard } from './TodoCard';
+export { default as ProjectForm } from './form/ProjectForm';
