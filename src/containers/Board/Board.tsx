@@ -1,8 +1,8 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React from 'react';
 import { View } from 'react-native';
-import CompletedKanban from './CompletedKanban';
-import Kanban from './Kanban';
+import CompletedKanban from '../Kanban/CompletedKanban';
+import Kanban from '../Kanban/Kanban';
 
 const Tab = createMaterialTopTabNavigator();
 

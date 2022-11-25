@@ -1,20 +1,23 @@
+import { Avatar } from 'native-base';
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import * as Progress from 'react-native-progress';
 
 type KanbanCardProps = {
   item: any;
+  key: any;
 };
 
 const KanbanCard = (props: KanbanCardProps) => {
   const { item } = props;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles[item.priority], styles.container]}>
       <View>
         <Text style={[styles.titleText, styles.text]}>{item?.title}</Text>
         {item.progress ? (
           <Progress.Bar
+            style={styles.progressBar}
             progress={item?.progress / 100}
             width={200}
             color={
@@ -39,15 +42,37 @@ const KanbanCard = (props: KanbanCardProps) => {
             color={'red'}
             borderWidth={0}
             animated={true}
-            unfilledColor={'#ccc'}
+            unfilledColor={'#fff'}
           />
         )}
+        <Text
+          style={[styles.progressText, styles.text]}
+        >{`${item.progress} %`}</Text>
+        <View style={{ marginTop: 10 }}>
+          <Text style={[styles.priorityText, styles.text]}>
+            {item?.priority}
+          </Text>
+        </View>
       </View>
       <View style={styles.progress}>
-        <Text style={[styles.progressText, styles.text]}>
-          {`${item?.completedTask} / ${item?.totalTask}`}
-        </Text>
-        <Text style={styles.progressStatus}>Task Completed</Text>
+        <Pressable style={{ marginBottom: 30 }}>
+          <Image
+            source={require('../assets/icons8-menu-vertical-50.png')}
+            tintColor="white"
+            style={{ width: 25, height: 25 }}
+          />
+        </Pressable>
+
+        <Avatar.Group
+          _avatar={{
+            size: 'sm',
+          }}
+          max={3}
+        >
+          {item.members.map((val: any) => (
+            <Avatar bg="cyan.500" source={{ uri: val.avatar }} />
+          ))}
+        </Avatar.Group>
       </View>
     </View>
   );
@@ -58,7 +83,7 @@ export default KanbanCard;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
     flexDirection: 'row',
@@ -66,17 +91,24 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   text: {
-    color: '#000',
+    color: '#fff',
   },
   titleText: {
     marginBottom: 10,
     fontSize: 18,
     fontWeight: 'bold',
   },
+  progressBar: {
+    marginBottom: 5,
+  },
+  progressText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
   progress: {
     alignItems: 'flex-end',
   },
-  progressText: {
+  priorityText: {
     marginBottom: 8,
     fontSize: 16,
     fontWeight: 'bold',
@@ -85,13 +117,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: 'lightgray',
   },
-  red: {
-    color: 'red',
+  High: {
+    backgroundColor: '#c34048',
   },
-  orange: {
-    color: 'orange',
+  Medium: {
+    backgroundColor: '#f8d030',
   },
-  lawngreen: {
-    color: 'lawngreen',
+  Low: {
+    backgroundColor: '#78c850',
   },
 });

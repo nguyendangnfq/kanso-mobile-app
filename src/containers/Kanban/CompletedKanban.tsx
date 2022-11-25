@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { fetchAllBoard } from '../store/board/boardSlice';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { View, Text, StyleSheet } from 'react-native';
+import KanbanCard from '../../components/KanbanCard';
+import { fetchAllBoard } from '../../store/board/boardSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 
 const CompletedKanban = (props: any) => {
   const { route } = props;
@@ -23,10 +24,21 @@ const CompletedKanban = (props: any) => {
   }, []);
 
   return (
-    <View>
-      <Text>CompletedKanban</Text>
+    <View style={styles.container}>
+      {boardData.length !== 0 &&
+        boardData.map(item => {
+          if (item.is_completed) {
+            return <KanbanCard key={item?.id_job} item={item} />;
+          }
+        })}
     </View>
   );
 };
 
 export default CompletedKanban;
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+});
