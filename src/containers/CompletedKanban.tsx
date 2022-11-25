@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { fetchAllBoard } from '../store/board/boardSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 
-const Kanban = (props: any) => {
+const CompletedKanban = (props: any) => {
   const { route } = props;
   const data = route.params;
 
@@ -12,8 +12,6 @@ const Kanban = (props: any) => {
   const token = useAppSelector(state => state.login.token);
   const vice_token = useAppSelector(state => state.register.token);
   const boardData = useAppSelector(state => state.board.listJobs);
-
-  console.log(boardData);
 
   useEffect(() => {
     dispatch(
@@ -26,11 +24,9 @@ const Kanban = (props: any) => {
 
   return (
     <View>
-      {boardData.map(item =>
-        item.is_completed === false ? <Text>Hello</Text> : null,
-      )}
+      <Text>CompletedKanban</Text>
     </View>
   );
 };
 
-export default Kanban;
+export default CompletedKanban;

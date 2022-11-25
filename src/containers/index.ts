@@ -5,3 +5,5 @@ export { default as Register } from './Register';
 export { default as UserSetting } from './UserSetting';
 export { default as Kanban } from './Kanban';
 export { default as Board } from './Board';
+export { default as BoardSetting } from './BoardSetting';
+export { default as CompletedKanban } from './CompletedKanban';

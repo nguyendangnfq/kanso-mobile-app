@@ -5,7 +5,7 @@ import {
   DropDownCustom,
   PokeLoader,
   TextInput,
-  TodoCard,
+  ProjectCard,
 } from '../components';
 import PokeCard from '../components/PokeCard';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -27,14 +27,14 @@ const Home = ({ navigation }: any) => {
   }, []);
 
   const handleBoardPage = (value: any) => {
-    navigation.navigate('Board', value);
+    navigation.navigate('BoardNavigator', value);
   };
 
   const renderItem = React.useCallback(({ item }: any) => {
     return (
       <Pressable onPress={() => handleBoardPage(item)}>
         {/* <PokeCard name={item.name} /> */}
-        <TodoCard item={item} />
+        <ProjectCard item={item} />
       </Pressable>
     );
   }, []);

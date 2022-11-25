@@ -2,11 +2,11 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import * as Progress from 'react-native-progress';
 
-type TodoCardProps = {
+type KanbanCardProps = {
   item: any;
 };
 
-const TodoCard = (props: TodoCardProps) => {
+const KanbanCard = (props: KanbanCardProps) => {
   const { item } = props;
 
   return (
@@ -53,7 +53,7 @@ const TodoCard = (props: TodoCardProps) => {
   );
 };
 
-export default TodoCard;
+export default KanbanCard;
 
 const styles = StyleSheet.create({
   container: {

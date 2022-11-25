@@ -4,8 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './utils';
 import MainNavigator from './Main';
-import { Board, Login, Register } from '../containers';
+import { Login, Register } from '../containers';
 import { ProjectForm } from '../components';
+import BoardNavigation from './Board.Navigation';
 
 const Stack = createStackNavigator();
 
@@ -40,7 +41,13 @@ const ApplicationNavigator = () => {
             }}
           />
           <Stack.Screen name="ProjectForm" component={ProjectForm} />
-          <Stack.Screen name="Board" component={Board} />
+          <Stack.Screen
+            name="BoardNavigator"
+            component={BoardNavigation}
+            options={{
+              headerShown: false,
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
