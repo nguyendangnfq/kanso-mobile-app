@@ -8,3 +8,4 @@ export { default as Logo } from './Logo';
 export { default as ProjectCard } from './ProjectCard';
 export { default as ProjectForm } from './form/ProjectForm';
 export { default as TaskCard } from './KanbanCard';
+export { default as AddKanbanForm } from './form/AddKanbanForm';

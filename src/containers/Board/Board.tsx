@@ -1,6 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React from 'react';
-import { View } from 'react-native';
 import CompletedKanban from '../Kanban/CompletedKanban';
 import Kanban from '../Kanban/Kanban';
 
@@ -14,20 +13,18 @@ const Board = (props: Props) => {
   const { route } = props;
 
   return (
-    <View style={{ flex: 1 }}>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="In Progress"
-          component={Kanban}
-          initialParams={route.params}
-        />
-        <Tab.Screen
-          name="Completed"
-          component={CompletedKanban}
-          initialParams={route.params}
-        />
-      </Tab.Navigator>
-    </View>
+    <Tab.Navigator>
+      <Tab.Screen
+        name="In Progress"
+        component={Kanban}
+        initialParams={route.params}
+      />
+      <Tab.Screen
+        name="Completed"
+        component={CompletedKanban}
+        initialParams={route.params}
+      />
+    </Tab.Navigator>
   );
 };
 

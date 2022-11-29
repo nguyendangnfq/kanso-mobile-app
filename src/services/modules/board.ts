@@ -11,4 +11,14 @@ export const boardApi = {
         console.log(error);
       });
   },
+  deleteBoard: (params: any) => {
+    return secondInstance
+      .post('/Job/deleteJob', params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
 };

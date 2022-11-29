@@ -10,6 +10,20 @@ export const fetchAllBoard = createAsyncThunk(
   },
 );
 
+export const deleteBoard = createAsyncThunk(
+  'board/deleteBoard',
+  async (params: any, thunkAPI) => {
+    thunkAPI.dispatch(
+      fetchAllBoard({
+        projectowner: params.projectowner,
+        owner: params.owner,
+      }),
+    );
+    const res = await boardApi.deleteBoard(params);
+    return res;
+  },
+);
+
 type boardStateType = {
   loading: boolean;
   listJobs: Array<any>;
@@ -28,6 +42,7 @@ export const boardSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder
+      // ------- Fetch Board Data ------------>
       .addCase(fetchAllBoard.pending, state => {
         state.loading = true;
         console.log('pending');
@@ -59,6 +74,19 @@ export const boardSlice = createSlice({
           });
           state.membersInProject = jobList.memberInProject;
         }
+      });
+
+    // ----------- Delete Board ------------>
+    builder
+      .addCase(deleteBoard.pending, state => {
+        state.loading = true;
+      })
+      .addCase(deleteBoard.rejected, state => {
+        state.loading = false;
+      })
+      .addCase(deleteBoard.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
       });
   },
 });

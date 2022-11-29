@@ -1,18 +1,31 @@
 import { Avatar } from 'native-base';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import * as Progress from 'react-native-progress';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 type KanbanCardProps = {
   item: any;
   key: any;
+  onToggleSnackBar: (value: any) => void;
 };
 
 const KanbanCard = (props: KanbanCardProps) => {
-  const { item } = props;
+  const { item, onToggleSnackBar } = props;
+  const [checked, setChecked] = useState(false);
 
   return (
     <View style={[styles[item.priority], styles.container]}>
+      <View>
+        <BouncyCheckbox
+          isChecked={checked}
+          fillColor="#34eb83"
+          unfillColor="#FFFFFF"
+          onPress={() => {
+            setChecked(!checked);
+          }}
+        />
+      </View>
       <View>
         <Text style={[styles.titleText, styles.text]}>{item?.title}</Text>
         {item.progress ? (
@@ -54,25 +67,37 @@ const KanbanCard = (props: KanbanCardProps) => {
           </Text>
         </View>
       </View>
-      <View style={styles.progress}>
-        <Pressable style={{ marginBottom: 30 }}>
-          <Image
-            source={require('../assets/icons8-menu-vertical-50.png')}
-            tintColor="white"
-            style={{ width: 25, height: 25 }}
-          />
-        </Pressable>
 
-        <Avatar.Group
-          _avatar={{
-            size: 'sm',
-          }}
-          max={3}
-        >
-          {item.members.map((val: any) => (
-            <Avatar bg="cyan.500" source={{ uri: val.avatar }} />
-          ))}
-        </Avatar.Group>
+      <View style={styles.progress}>
+        {!checked ? (
+          <Avatar.Group
+            _avatar={{
+              size: 'sm',
+            }}
+            max={2}
+          >
+            {item.members.map((val: any) => (
+              <Avatar bg="cyan.500" source={{ uri: val.avatar }} />
+            ))}
+          </Avatar.Group>
+        ) : (
+          <>
+            <Pressable>
+              <Image
+                source={require('../assets/edit.png')}
+                tintColor="white"
+                style={styles.imageEdit}
+              />
+            </Pressable>
+            <Pressable onPress={() => onToggleSnackBar(item.id_job)}>
+              <Image
+                source={require('../assets/delete.png')}
+                tintColor="white"
+                style={styles.imageDelete}
+              />
+            </Pressable>
+          </>
+        )}
       </View>
     </View>
   );
@@ -83,7 +108,6 @@ export default KanbanCard;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    // backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
     flexDirection: 'row',
@@ -116,6 +140,15 @@ const styles = StyleSheet.create({
   progressStatus: {
     fontSize: 13,
     color: 'lightgray',
+  },
+  imageEdit: {
+    width: 25,
+    height: 25,
+    marginBottom: 40,
+  },
+  imageDelete: {
+    width: 25,
+    height: 25,
   },
   High: {
     backgroundColor: '#c34048',
