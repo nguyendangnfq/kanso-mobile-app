@@ -1,32 +1,28 @@
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
-import { SegmentedButtons } from 'react-native-paper';
+import { SegmentedButtons, Switch } from 'react-native-paper';
 import Button from '../Button';
 import moment from 'moment';
 import MultiSelect from 'react-native-multiple-select';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-date-picker';
 
-type AddKanbanFormProps = {
+type EditKanbanFormProps = {
   onSubmit: (value: any) => void;
-  member: Array<string>;
+  data: any;
   boardData: any;
 };
 
-const AddKanbanForm = (props: AddKanbanFormProps) => {
-  const { onSubmit, member, boardData } = props;
+const EditKanbanForm = (props: EditKanbanFormProps) => {
+  const { onSubmit, data, boardData } = props;
 
   const [openStartDate, setOpenStartDate] = useState(false);
   const [openEndDate, setOpenEndDate] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
-  const memberList = member.map(item => {
-    return item;
-  });
-
-  const data = boardData.map((item: any) => {
+  const parentData = boardData.map((item: any) => {
     return {
       label: item.title,
       value: item.id_job,
@@ -39,11 +35,11 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      title: '',
-      priority: '',
-      start_time: '',
-      end_time: '',
-      members: [],
+      title: data?.title,
+      priority: data?.priority,
+      start_time: data?.start_time,
+      end_time: data?.end_time,
+      is_completed: false,
       parent: 'not',
     },
   });
@@ -98,6 +94,15 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
         <Text style={styles.textError}>This is required.</Text>
       )}
 
+      <Text style={styles.label}>Complete</Text>
+      <Controller
+        control={control}
+        render={({ field: { onChange, value } }) => (
+          <Switch value={value} onValueChange={onChange} />
+        )}
+        name="is_completed"
+      />
+
       <View>
         <Text style={styles.label}>Start Date</Text>
         <Controller
@@ -108,9 +113,7 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
           render={({ field: { onChange, value } }) => (
             <>
               <Text onPress={() => setOpenStartDate(true)}>
-                {value === ''
-                  ? 'Pick a date'
-                  : moment(startDate).format('YYYY-MM-DD')}
+                {value ? value : moment(startDate).format('YYYY-MM-DD')}
               </Text>
               <DatePicker
                 modal
@@ -146,9 +149,7 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
           render={({ field: { onChange, value } }) => (
             <>
               <Text onPress={() => setOpenEndDate(true)}>
-                {value === ''
-                  ? 'Pick a date'
-                  : moment(endDate).format('YYYY-MM-DD')}
+                {value ? value : moment(endDate).format('YYYY-MM-DD')}
               </Text>
               <DatePicker
                 modal
@@ -175,43 +176,6 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
       </View>
 
       <View>
-        <Text style={styles.label}>Members</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, value } }) => (
-            <MultiSelect
-              hideTags
-              items={memberList}
-              uniqueKey="name"
-              onSelectedItemsChange={onChange}
-              selectedItems={value}
-              selectText="Pick Members"
-              searchInputPlaceholderText="Search Members..."
-              onChangeInput={text => console.log(text)}
-              altFontFamily="ProximaNova-Light"
-              tagRemoveIconColor="#CCC"
-              tagBorderColor="#CCC"
-              tagTextColor="#CCC"
-              selectedItemTextColor="#CCC"
-              selectedItemIconColor="#CCC"
-              itemTextColor="#000"
-              displayKey="name"
-              searchInputStyle={{ color: '#CCC' }}
-              submitButtonColor="#CCC"
-              submitButtonText="Submit"
-            />
-          )}
-          name="members"
-        />
-        {errors.members && (
-          <Text style={styles.textError}>This is required.</Text>
-        )}
-      </View>
-
-      <View>
         <Text style={styles.label}>Parent Job</Text>
         <Controller
           control={control}
@@ -222,7 +186,7 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
                 value: 'not',
                 color: '#9EA0A4',
               }}
-              items={data}
+              items={parentData}
               onValueChange={onChange}
               value={value}
               style={pickerSelectStyles}
@@ -233,13 +197,13 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
       </View>
 
       <Button mode="contained" onPress={handleSubmit(onSubmit)}>
-        Create
+        Modify
       </Button>
     </ScrollView>
   );
 };
 
-export default AddKanbanForm;
+export default EditKanbanForm;
 
 const styles = StyleSheet.create({
   label: {

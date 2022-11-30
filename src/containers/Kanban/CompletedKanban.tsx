@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, ScrollView, Pressable } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 import KanbanCard from '../../components/KanbanCard';
-import { fetchAllBoard } from '../../store/board/boardSlice';
+import { deleteBoard, fetchAllBoard } from '../../store/board/boardSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import PokeLoader from './../../components/PokeLoader';
 
 const CompletedKanban = (props: any) => {
+  const [snackvisible, setSnackVisible] = React.useState(false);
+  const [idJob, setIdJob] = React.useState('');
+
   const { route, navigation } = props;
   const data = route.params;
 
@@ -25,6 +29,23 @@ const CompletedKanban = (props: any) => {
     );
   }, []);
 
+  const onDismissSnackBar = () => setSnackVisible(false);
+
+  const onToggleSnackBar = (value: any) => {
+    setSnackVisible(!snackvisible);
+    setIdJob(value);
+  };
+
+  const handleDeleteKanban = (value: any) => {
+    const deleteValue = {
+      owner: token || vice_token,
+      projectowner: data?.idProject,
+      kanban_id: value,
+    };
+    dispatch(deleteBoard(deleteValue));
+    setSnackVisible(false);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.outer}>
       {!loading ? (
@@ -35,13 +56,31 @@ const CompletedKanban = (props: any) => {
           {boardData.length !== 0 &&
             boardData.map(item => {
               if (item.is_completed) {
-                return <KanbanCard key={item?.id_job} item={item} />;
+                return (
+                  <KanbanCard
+                    key={item?.id_job}
+                    item={item}
+                    onToggleSnackBar={onToggleSnackBar}
+                  />
+                );
               }
             })}
         </Pressable>
       ) : (
         <PokeLoader />
       )}
+      <Snackbar
+        visible={snackvisible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Sure',
+          onPress: () => {
+            handleDeleteKanban(idJob);
+          },
+        }}
+      >
+        Are you sure to delete this board ?
+      </Snackbar>
     </ScrollView>
   );
 };

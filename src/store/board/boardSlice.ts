@@ -13,13 +13,41 @@ export const fetchAllBoard = createAsyncThunk(
 export const deleteBoard = createAsyncThunk(
   'board/deleteBoard',
   async (params: any, thunkAPI) => {
-    thunkAPI.dispatch(
+    const res = await boardApi.deleteBoard(params);
+    await thunkAPI.dispatch(
       fetchAllBoard({
         projectowner: params.projectowner,
         owner: params.owner,
       }),
     );
-    const res = await boardApi.deleteBoard(params);
+    return res;
+  },
+);
+
+export const createBoard = createAsyncThunk(
+  'board/createBoard',
+  async (params: any, thunkAPI) => {
+    const res = await boardApi.createBoard(params);
+    await thunkAPI.dispatch(
+      fetchAllBoard({
+        projectowner: params.projectowner,
+        owner: params.owner,
+      }),
+    );
+    return res;
+  },
+);
+
+export const editBoard = createAsyncThunk(
+  'board/editBoard',
+  async (params: any, thunkAPI) => {
+    const res = await boardApi.editBoard(params);
+    await thunkAPI.dispatch(
+      fetchAllBoard({
+        projectowner: params.projectowner,
+        owner: params.owner,
+      }),
+    );
     return res;
   },
 );
@@ -85,6 +113,30 @@ export const boardSlice = createSlice({
         state.loading = false;
       })
       .addCase(deleteBoard.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+      });
+
+    // ------------- Create Board ------------->
+    builder
+      .addCase(createBoard.pending, state => {
+        state.loading = true;
+      })
+      .addCase(createBoard.rejected, state => {
+        state.loading = false;
+      })
+      .addCase(createBoard.fulfilled, state => {
+        state.loading = false;
+      });
+    // -------------- Edit Board ------------->
+    builder
+      .addCase(editBoard.pending, state => {
+        state.loading = true;
+      })
+      .addCase(editBoard.rejected, state => {
+        state.loading = false;
+      })
+      .addCase(editBoard.fulfilled, (state, action) => {
         state.loading = false;
         console.log(action.payload);
       });

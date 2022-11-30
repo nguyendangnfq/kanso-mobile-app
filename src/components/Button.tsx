@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
 import { theme } from '../theme/theme';
 
-export default function Button({ mode, style, ...props }) {
+export default function Button({ mode, style, ...props }: any) {
   return (
     <PaperButton
       style={[
