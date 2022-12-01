@@ -33,7 +33,6 @@ export const boardApi = {
   },
 
   editBoard: (params: any) => {
-    console.log(params);
     return secondInstance
       .post('/Job/edit_Job', params)
       .then(response => {

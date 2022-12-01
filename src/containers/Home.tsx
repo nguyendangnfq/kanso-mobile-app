@@ -23,7 +23,6 @@ const Home = ({ navigation }: any) => {
   const renderItem = React.useCallback(({ item }: any) => {
     return (
       <Pressable onPress={() => handleBoardPage(item)}>
-        {/* <PokeCard name={item.name} /> */}
         <ProjectCard item={item} />
       </Pressable>
     );

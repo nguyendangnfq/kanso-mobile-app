@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import * as Progress from 'react-native-progress';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { Portal, Provider, Modal } from 'react-native-paper';
-import EditKanbanForm from './form/EditKanbanForm';
 
 type KanbanCardProps = {
   item: any;

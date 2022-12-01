@@ -1,13 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Pressable, StyleSheet, ScrollView } from 'react-native';
-import {
-  FAB,
-  Modal,
-  Portal,
-  Provider,
-  Snackbar,
-  Text,
-} from 'react-native-paper';
+import { FAB, Modal, Portal, Provider, Snackbar } from 'react-native-paper';
 import { AddKanbanForm, EditKanbanForm } from '../../components';
 import KanbanCard from '../../components/KanbanCard';
 import {
@@ -46,6 +39,7 @@ const Kanban = (props: any) => {
       }),
     );
   }, []);
+
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
@@ -130,21 +124,23 @@ const Kanban = (props: any) => {
       <ScrollView contentContainerStyle={styles.outer}>
         {!loading ? (
           <View style={styles.container}>
-            <Pressable onPress={() => navigation.navigate('Task')}>
-              {boardData.length !== 0 &&
-                boardData.map(item => {
-                  if (!item.is_completed) {
-                    return (
+            {boardData.length !== 0 &&
+              boardData.map(item => {
+                if (!item.is_completed) {
+                  return (
+                    <Pressable
+                      onPress={() => navigation.navigate('Task', item)}
+                    >
                       <KanbanCard
                         onToggleEditModal={onToggleEditModal}
                         key={item?.id_job}
                         item={item}
                         onToggleSnackBar={onToggleSnackBar}
                       />
-                    );
-                  }
-                })}
-            </Pressable>
+                    </Pressable>
+                  );
+                }
+              })}
             <FAB
               icon={require('../../assets/plus.png')}
               style={styles.fab}

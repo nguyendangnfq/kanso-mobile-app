@@ -1,15 +1,61 @@
-import React from 'react';
-import { View } from 'react-native';
-import { Text } from 'react-native-paper';
+import React, { useEffect } from 'react';
+import { View, ScrollView, StyleSheet } from 'react-native';
+import { PokeLoader, TaskCard } from '../../components';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchTask } from '../../store/task/taskSlice';
 
-type Props = {};
+const InReview = (props: any) => {
+  const { route, navigation } = props;
 
-const InReview = (props: Props) => {
+  const dispatch = useAppDispatch();
+  const columns = useAppSelector(state => state.task.listTask);
+  const loading = useAppSelector(state => state.task.loading);
+
+  const data = route.params;
+
+  const idBoard = data.id_job;
+
+  // useEffect(() => {
+  //   dispatch(fetchTask({ jobowner: idBoard }));
+  // }, []);
   return (
-    <View>
-      <Text>InReview</Text>
-    </View>
+    <>
+      {!loading ? (
+        <ScrollView style={styles.outer}>
+          {columns.map((column: any) =>
+            column?.eachColumnTask?.map((task: any, index: any) => {
+              if (column.id_column === 2) {
+                return (
+                  <View style={styles.container}>
+                    <TaskCard
+                      keyColumn={column.id_column}
+                      task={task}
+                      key={task.id}
+                      index={index}
+                      columnId={column.id_column}
+                    />
+                  </View>
+                );
+              }
+            }),
+          )}
+        </ScrollView>
+      ) : (
+        <PokeLoader />
+      )}
+    </>
   );
 };
 
 export default InReview;
+
+const styles = StyleSheet.create({
+  outer: {
+    flex: 1,
+  },
+  container: {
+    padding: 20,
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+});

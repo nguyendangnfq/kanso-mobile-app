@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import Button from '../Button';
-import TextInput from '../TextInput';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { createProject } from '../../store/project/projectSlice';
+import Button from '../../Button';
+import TextInput from '../../TextInput';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { createProject } from '../../../store/project/projectSlice';
 
 const ProjectForm = () => {
   const [name, setName] = useState({ value: '', error: '' });

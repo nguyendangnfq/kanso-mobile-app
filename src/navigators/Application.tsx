@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { navigationRef } from './utils';
 import MainNavigator from './Main';
-import { Login, Register, Task } from '../containers';
+import { Login, Register, Task, DetailTask } from '../containers';
 import { ProjectForm } from '../components';
 import BoardNavigation from './Board.Navigation';
 import { NativeBaseProvider } from 'native-base';
@@ -51,6 +51,7 @@ const ApplicationNavigator = () => {
               }}
             />
             <Stack.Screen name="Task" component={Task} />
+            <Stack.Screen name="Detail Task" component={DetailTask} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

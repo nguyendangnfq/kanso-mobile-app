@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
 import { SegmentedButtons } from 'react-native-paper';
-import Button from '../Button';
+import Button from '../../Button';
 import moment from 'moment';
 import MultiSelect from 'react-native-multiple-select';
 import RNPickerSelect from 'react-native-picker-select';
