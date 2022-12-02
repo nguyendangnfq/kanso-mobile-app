@@ -1,26 +1,89 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { FAB, Provider, Text, Portal, Modal } from 'react-native-paper';
-import { AddTaskForm, TaskCard } from '../../components';
+import {
+  FAB,
+  Provider,
+  Portal,
+  Modal,
+  Snackbar,
+  Text,
+} from 'react-native-paper';
+import { AddTaskForm, EditTaskForm, TaskCard } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchTask } from '../../store/task/taskSlice';
+import { deleteTask, editTask, fetchTask } from '../../store/task/taskSlice';
 import PokeLoader from '../../components/PokeLoader';
+import { createTask } from '../../store/task/taskSlice';
+import moment from 'moment';
 
 const Backlogs = (props: any) => {
   const { route, navigation } = props;
 
   const [visible, setVisible] = useState(false);
+  const [editFormVisible, setEditFormVisible] = useState(false);
+  const [snackvisible, setSnackVisible] = useState(false);
+  const [idTask, setIdTask] = useState('');
+  const [idEditTask, setIdEditTask] = useState('');
+  const [editData, setEditData] = useState({});
+  const [columnId, setColumnId] = useState(null);
 
   const columns = useAppSelector(state => state.task.listTask);
   const loading = useAppSelector(state => state.task.loading);
+  const taskInfo = useAppSelector(state => state.task.jobInfo);
+  const token = useAppSelector(state => state.login.token);
+  const vice_token = useAppSelector(state => state.register.token);
   const dispatch = useAppDispatch();
 
-  const data = route.params;
+  const data = route.params.item;
+  const kanbanData = route.params.data;
 
   const idBoard = data.id_job;
 
-  const showModal = () => setVisible(true);
+  const showModal = () => {
+    setVisible(true);
+  };
+  const showEditModal = () => {
+    setEditFormVisible(true);
+  };
   const hideModal = () => setVisible(false);
+  const hideEditModal = () => setEditFormVisible(false);
+
+  const onDismissSnackBar = () => setSnackVisible(false);
+  const onToggleSnackBar = (value: any) => {
+    setSnackVisible(!snackvisible);
+    setIdTask(value);
+  };
+
+  const onToggleEditModal = (value: any, idOfColumn: any) => {
+    showEditModal();
+    setColumnId(idOfColumn);
+    setIdEditTask(value);
+    columns.map((column: any) =>
+      column.eachColumnTask.map((task: any) => {
+        if (column.id_column !== 0) {
+          return;
+        } else {
+          setEditData(task);
+        }
+      }),
+    );
+  };
+
+  const handleEditTask = (value: any) => {
+    const editedValue = {
+      columnId: columnId,
+      idBoard: idBoard,
+      editTask: {
+        ...value,
+        start_time: moment(value.start_time).format('YYYY-MM-DD'),
+        end_time: moment(value.end_time).format('YYYY-MM-DD'),
+        taskId: idEditTask,
+      },
+    };
+    console.log(editedValue);
+
+    dispatch(editTask(editedValue));
+    hideEditModal();
+  };
 
   useEffect(() => {
     dispatch(fetchTask({ jobowner: idBoard }));
@@ -28,18 +91,34 @@ const Backlogs = (props: any) => {
 
   const containerStyle = { backgroundColor: 'white', padding: 20, margin: 10 };
 
+  const handleCreateTask = (value: any) => {
+    let tempTasker = value.taskers.map((item: any) => {
+      return {
+        name: item,
+      };
+    });
+    const newValue = {
+      ...value,
+      idBoard: idBoard,
+      progress: 0,
+      owner: token || vice_token,
+      projectowner: kanbanData.idProject,
+      taskers: tempTasker,
+    };
+    dispatch(createTask(newValue));
+  };
+
+  const handleDeleteTask = (value: any) => {
+    const deleteValue = {
+      taskId: value,
+      jobowner: idBoard,
+    };
+    console.log(deleteValue);
+    dispatch(deleteTask(deleteValue));
+  };
+
   return (
     <Provider>
-      <Portal>
-        <Modal
-          visible={visible}
-          dismissable={true}
-          onDismiss={hideModal}
-          contentContainerStyle={containerStyle}
-        >
-          <AddTaskForm />
-        </Modal>
-      </Portal>
       <ScrollView contentContainerStyle={styles.outer}>
         {!loading ? (
           <View style={styles.container}>
@@ -47,17 +126,70 @@ const Backlogs = (props: any) => {
               column?.eachColumnTask?.map((task: any, index: any) => {
                 if (column.id_column === 0) {
                   return (
-                    <Pressable
-                      onPress={() => navigation.navigate('Detail Task', task)}
-                    >
-                      <TaskCard
-                        keyColumn={column.id_column}
-                        task={task}
-                        key={task.id}
-                        index={index}
-                        columnId={column.id_column}
-                      />
-                    </Pressable>
+                    <>
+                      <Portal>
+                        <Modal
+                          visible={visible}
+                          dismissable={true}
+                          onDismiss={hideModal}
+                          contentContainerStyle={containerStyle}
+                        >
+                          <AddTaskForm
+                            startDate={taskInfo.start_time}
+                            endDate={taskInfo.end_time}
+                            task={task}
+                            onSubmit={handleCreateTask}
+                          />
+                        </Modal>
+                        <Modal
+                          visible={editFormVisible}
+                          dismissable={true}
+                          onDismiss={hideEditModal}
+                          contentContainerStyle={containerStyle}
+                        >
+                          <EditTaskForm
+                            task={editData}
+                            onSubmit={handleEditTask}
+                            startDate={taskInfo.start_time}
+                            endDate={taskInfo.end_time}
+                          />
+                        </Modal>
+                      </Portal>
+                      <Pressable
+                        onPress={() => navigation.navigate('Detail Task', task)}
+                      >
+                        <TaskCard
+                          onToggleEditModal={onToggleEditModal}
+                          onToggleSnackBar={onToggleSnackBar}
+                          keyColumn={column.id_column}
+                          task={task}
+                          key={task.id}
+                          index={index}
+                          columnId={column.id_column}
+                        />
+                      </Pressable>
+                    </>
+                  );
+                } else {
+                  return (
+                    <View style={styles.noDataContainer}>
+                      <Portal>
+                        <Modal
+                          visible={visible}
+                          dismissable={true}
+                          onDismiss={hideModal}
+                          contentContainerStyle={containerStyle}
+                        >
+                          <AddTaskForm
+                            startDate={taskInfo.start_time}
+                            endDate={taskInfo.end_time}
+                            task={task}
+                            onSubmit={handleCreateTask}
+                          />
+                        </Modal>
+                      </Portal>
+                      <Text>NO DATA</Text>
+                    </View>
                   );
                 }
               }),
@@ -71,6 +203,18 @@ const Backlogs = (props: any) => {
         ) : (
           <PokeLoader />
         )}
+        <Snackbar
+          visible={snackvisible}
+          onDismiss={onDismissSnackBar}
+          action={{
+            label: 'Sure',
+            onPress: () => {
+              handleDeleteTask(idTask);
+            },
+          }}
+        >
+          Are you sure to delete this board ?
+        </Snackbar>
       </ScrollView>
     </Provider>
   );
@@ -84,13 +228,17 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'space-between',
+    padding: 10,
   },
   fab: {
     position: 'absolute',
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  noDataContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 });

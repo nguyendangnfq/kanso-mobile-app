@@ -1,39 +1,28 @@
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
-import { SegmentedButtons } from 'react-native-paper';
-import Button from '../../Button';
 import moment from 'moment';
-import MultiSelect from 'react-native-multiple-select';
-import RNPickerSelect from 'react-native-picker-select';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { TextInput, ScrollView, StyleSheet, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import MultiSelect from 'react-native-multiple-select';
+import { Text, SegmentedButtons } from 'react-native-paper';
+import Button from '../../Button';
 
-type AddKanbanFormProps = {
+type EditTaskFormProps = {
+  startDate: string;
+  endDate: string;
+  task: any;
   onSubmit: (value: any) => void;
-  member: Array<string>;
-  boardData: any;
 };
 
-const AddKanbanForm = (props: AddKanbanFormProps) => {
-  const { onSubmit, member, boardData } = props;
+const EditTaskForm = (props: EditTaskFormProps) => {
+  const { startDate, endDate, task, onSubmit } = props;
 
   const [openStartDate, setOpenStartDate] = useState(false);
   const [openEndDate, setOpenEndDate] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startTime, setStartTime] = useState(new Date(startDate));
+  const [endTime, setEndTime] = useState(new Date(endDate));
 
-  const memberList = member.map(item => {
-    console.log(item);
-
-    return item;
-  });
-
-  const data = boardData.map((item: any) => {
-    return {
-      label: item.title,
-      value: item.id_job,
-    };
-  });
+  const taskers = task?.taskers?.map((item: any) => item);
 
   const {
     control,
@@ -41,12 +30,15 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      title: '',
-      priority: '',
-      start_time: '',
-      end_time: '',
-      members: [],
-      parent: 'not',
+      taskId: task?.id,
+      title: task?.title,
+      description: task?.description,
+      priority: task?.priority,
+      start_time: task?.start_time,
+      end_time: task?.end_time,
+      taskers: task?.taskers,
+      totalConversation: task?.totalConversation,
+      totalDetilTask: task?.totalDetilTask,
     },
   });
 
@@ -69,6 +61,26 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
         name="title"
       />
       {errors.title && <Text style={styles.textError}>This is required.</Text>}
+
+      <Text style={styles.label}>Description</Text>
+      <Controller
+        control={control}
+        rules={{
+          required: true,
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            style={styles.input}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+          />
+        )}
+        name="description"
+      />
+      {errors.description && (
+        <Text style={styles.textError}>This is required.</Text>
+      )}
 
       <Text style={styles.label}>Priority</Text>
       <Controller
@@ -110,20 +122,21 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
           render={({ field: { onChange, value } }) => (
             <>
               <Text onPress={() => setOpenStartDate(true)}>
-                {value === ''
-                  ? 'Pick a date'
-                  : moment(startDate).format('YYYY-MM-DD')}
+                {value
+                  ? moment(value).format('YYYY-MM-DD')
+                  : moment(startTime).format('YYYY-MM-DD')}
               </Text>
               <DatePicker
                 modal
                 mode="date"
                 open={openStartDate}
+                maximumDate={endTime}
                 minimumDate={new Date()}
                 date={new Date()}
                 onConfirm={date => {
                   setOpenStartDate(false);
                   onChange(moment(date).format('YYYY-MM-DD'));
-                  setStartDate(date);
+                  setStartTime(date);
                 }}
                 onCancel={() => {
                   setOpenStartDate(false);
@@ -148,20 +161,21 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
           render={({ field: { onChange, value } }) => (
             <>
               <Text onPress={() => setOpenEndDate(true)}>
-                {value === ''
-                  ? 'Pick a date'
-                  : moment(endDate).format('YYYY-MM-DD')}
+                {value
+                  ? moment(value).format('YYYY-MM-DD')
+                  : moment(endTime).format('YYYY-MM-DD')}
               </Text>
               <DatePicker
                 modal
                 mode="date"
                 open={openEndDate}
+                maximumDate={endTime}
                 minimumDate={new Date()}
                 date={new Date()}
                 onConfirm={date => {
                   setOpenEndDate(false);
                   onChange(moment(date).format('YYYY-MM-DD'));
-                  setEndDate(date);
+                  setEndTime(date);
                 }}
                 onCancel={() => {
                   setOpenEndDate(false);
@@ -186,8 +200,8 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
           render={({ field: { onChange, value } }) => (
             <MultiSelect
               hideTags
-              items={memberList}
-              uniqueKey="name"
+              items={taskers}
+              uniqueKey="user_name"
               onSelectedItemsChange={onChange}
               selectedItems={value}
               selectText="Pick Members"
@@ -200,48 +214,27 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
               selectedItemTextColor="#CCC"
               selectedItemIconColor="#CCC"
               itemTextColor="#000"
-              displayKey="name"
+              displayKey="display_name"
               searchInputStyle={{ color: '#CCC' }}
               submitButtonColor="#CCC"
               submitButtonText="Submit"
             />
           )}
-          name="members"
+          name="taskers"
         />
-        {errors.members && (
+        {errors.taskers && (
           <Text style={styles.textError}>This is required.</Text>
         )}
       </View>
 
-      <View>
-        <Text style={styles.label}>Parent Job</Text>
-        <Controller
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <RNPickerSelect
-              placeholder={{
-                label: 'Not Available',
-                value: 'not',
-                color: '#9EA0A4',
-              }}
-              items={data}
-              onValueChange={onChange}
-              value={value}
-              style={pickerSelectStyles}
-            />
-          )}
-          name="parent"
-        />
-      </View>
-
       <Button mode="contained" onPress={handleSubmit(onSubmit)}>
-        Create
+        Modify
       </Button>
     </ScrollView>
   );
 };
 
-export default AddKanbanForm;
+export default EditTaskForm;
 
 const styles = StyleSheet.create({
   label: {
@@ -274,27 +267,5 @@ const styles = StyleSheet.create({
   },
   textError: {
     color: 'red',
-  },
-});
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
   },
 });

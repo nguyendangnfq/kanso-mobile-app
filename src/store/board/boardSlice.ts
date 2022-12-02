@@ -73,7 +73,6 @@ export const boardSlice = createSlice({
       // ------- Fetch Board Data ------------>
       .addCase(fetchAllBoard.pending, state => {
         state.loading = true;
-        console.log('pending');
       })
       .addCase(fetchAllBoard.rejected, state => {
         state.loading = false;

@@ -19,7 +19,7 @@ const Kanban = (props: any) => {
   const [snackvisible, setSnackVisible] = React.useState(false);
   const [idJob, setIdJob] = React.useState('');
   const [idJobEdit, setIdJobEdit] = React.useState('');
-  const [editData, setEditData] = React.useState('');
+  const [editData, setEditData] = React.useState({});
 
   const data = route.params;
 
@@ -129,7 +129,9 @@ const Kanban = (props: any) => {
                 if (!item.is_completed) {
                   return (
                     <Pressable
-                      onPress={() => navigation.navigate('Task', item)}
+                      onPress={() =>
+                        navigation.navigate('Task', { item, data })
+                      }
                     >
                       <KanbanCard
                         onToggleEditModal={onToggleEditModal}
@@ -176,7 +178,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-    justifyContent: 'space-between',
   },
   fab: {
     position: 'absolute',

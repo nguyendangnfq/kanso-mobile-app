@@ -1,5 +1,6 @@
+import { Alert } from 'native-base';
 import React, { useEffect } from 'react';
-import { StyleSheet, ScrollView, Pressable } from 'react-native';
+import { StyleSheet, ScrollView, Pressable, View } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import KanbanCard from '../../components/KanbanCard';
 import { deleteBoard, fetchAllBoard } from '../../store/board/boardSlice';
@@ -49,23 +50,24 @@ const CompletedKanban = (props: any) => {
   return (
     <ScrollView contentContainerStyle={styles.outer}>
       {!loading ? (
-        <Pressable
-          style={styles.container}
-          onPress={() => navigation.navigate('Task')}
-        >
+        <View style={styles.container}>
           {boardData.length !== 0 &&
             boardData.map(item => {
               if (item.is_completed) {
                 return (
-                  <KanbanCard
-                    key={item?.id_job}
-                    item={item}
-                    onToggleSnackBar={onToggleSnackBar}
-                  />
+                  <Pressable
+                    onPress={() => navigation.navigate('Task', { item, data })}
+                  >
+                    <KanbanCard
+                      key={item?.id_job}
+                      item={item}
+                      onToggleSnackBar={onToggleSnackBar}
+                    />
+                  </Pressable>
                 );
               }
             })}
-        </Pressable>
+        </View>
       ) : (
         <PokeLoader />
       )}

@@ -1,8 +1,7 @@
 import { Avatar } from 'native-base';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import * as Progress from 'react-native-progress';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { automaticallyUpdateColumn } from '../store/task/taskSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import moment from 'moment';
@@ -13,11 +12,13 @@ type TaskCardProps = {
   index: any;
   columnId: any;
   keyColumn: any;
+  onToggleSnackBar: (value: any) => void;
+  onToggleEditModal: (value: any, idOfColumn: any) => void;
 };
 
 const TaskCard = (props: TaskCardProps) => {
-  const { task, index, columnId } = props;
-  const [checked, setChecked] = useState(false);
+  const { task, index, columnId, onToggleSnackBar, onToggleEditModal } = props;
+
   const dispatch = useAppDispatch();
   const loading = useAppSelector(state => state.task.loading);
 
@@ -30,27 +31,17 @@ const TaskCard = (props: TaskCardProps) => {
   return (
     <>
       <View style={[styles[task.priority], styles.container]}>
-        {/* <View>
-          <BouncyCheckbox
-            isChecked={checked}
-            fillColor="#34eb83"
-            unfillColor="#FFFFFF"
-            onPress={() => {
-              setChecked(!checked);
-            }}
-          />
-        </View> */}
         <View style={styles.action}>
           <Text style={[styles.titleText, styles.text]}>{task?.title}</Text>
           <View style={styles.progress}>
-            <Pressable>
+            <Pressable onPress={() => onToggleEditModal(task?.id, columnId)}>
               <Image
                 source={require('../assets/edit.png')}
                 tintColor="white"
                 style={styles.imageEdit}
               />
             </Pressable>
-            <Pressable>
+            <Pressable onPress={() => onToggleSnackBar(task?.id)}>
               <Image
                 source={require('../assets/delete.png')}
                 tintColor="white"
@@ -82,13 +73,7 @@ const TaskCard = (props: TaskCardProps) => {
           </Avatar.Group>
         </View>
 
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
+        <View style={styles.status}>
           <Text style={[styles.priorityText, styles.text]}>
             {task?.priority}
           </Text>
@@ -138,7 +123,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    marginBottom: 8,
   },
   text: {
     color: '#fff',
@@ -149,6 +133,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   action: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  status: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',

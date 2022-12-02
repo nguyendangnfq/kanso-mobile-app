@@ -8,7 +8,7 @@ type KanbanCardProps = {
   item: any;
   key: any;
   onToggleSnackBar: (value: any) => void;
-  onToggleEditModal: (value: any) => void;
+  onToggleEditModal?: (value: any) => void;
 };
 
 const KanbanCard = (props: KanbanCardProps) => {
