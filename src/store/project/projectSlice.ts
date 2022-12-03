@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { projectApi } from '../../services/modules/project';
 import { listUserInfo } from '../user/userSettingSlice';
 import { userApi } from '../../services/modules/user';
+import { fetchAllBoard } from '../board/boardSlice';
 
 export const createProject = createAsyncThunk(
   'project/createProject',
@@ -16,6 +17,28 @@ export const checkRoleUser = createAsyncThunk(
   'project/checkRoleUser',
   async (params: any) => {
     const res = await userApi.checkRole(params);
+    return res;
+  },
+);
+
+export const renameProject = createAsyncThunk(
+  'project/renameProject',
+  async (params: any, thunkAPI) => {
+    const res = await projectApi.renameProject(params);
+    thunkAPI.dispatch(
+      fetchAllBoard({
+        projectowner: params.idProject,
+        owner: params.idUser,
+      }),
+    );
+    return res;
+  },
+);
+
+export const deleteProject = createAsyncThunk(
+  'project/deleteProject',
+  async (params: any) => {
+    const res = await projectApi.deleteProject(params);
     return res;
   },
 );
@@ -59,6 +82,30 @@ export const projectSlice = createSlice({
       })
       .addCase(checkRoleUser.fulfilled, (state, action) => {
         state.role = action.payload.result[0].tag;
+      });
+
+    builder
+      .addCase(deleteProject.pending, state => {
+        state.loading = true;
+      })
+      .addCase(deleteProject.rejected, state => {
+        state.loading = false;
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+      });
+
+    builder
+      .addCase(renameProject.pending, state => {
+        state.loading = true;
+      })
+      .addCase(renameProject.rejected, state => {
+        state.loading = false;
+      })
+      .addCase(renameProject.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
       });
   },
 });

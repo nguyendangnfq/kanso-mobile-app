@@ -11,4 +11,28 @@ export const projectApi = {
         console.log(error);
       });
   },
+
+  deleteProject: (idProject: any) => {
+    return secondInstance
+      .post('/project/deleteProject', {
+        idProject: idProject,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+
+  renameProject: (params: any) => {
+    return secondInstance
+      .post('/project/renameProject', params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
 };

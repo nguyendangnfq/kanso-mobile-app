@@ -1,6 +1,6 @@
 import { Alert } from 'native-base';
 import React, { useEffect } from 'react';
-import { StyleSheet, ScrollView, Pressable, View } from 'react-native';
+import { StyleSheet, ScrollView, Pressable, View, Text } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import KanbanCard from '../../components/KanbanCard';
 import { deleteBoard, fetchAllBoard } from '../../store/board/boardSlice';
@@ -51,7 +51,7 @@ const CompletedKanban = (props: any) => {
     <ScrollView contentContainerStyle={styles.outer}>
       {!loading ? (
         <View style={styles.container}>
-          {boardData.length !== 0 &&
+          {boardData.length !== 0 ? (
             boardData.map(item => {
               if (item.is_completed) {
                 return (
@@ -66,7 +66,12 @@ const CompletedKanban = (props: any) => {
                   </Pressable>
                 );
               }
-            })}
+            })
+          ) : (
+            <View style={styles.viewNodata}>
+              <Text style={styles.textNodata}>No data</Text>
+            </View>
+          )}
         </View>
       ) : (
         <PokeLoader />
@@ -95,5 +100,13 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 20,
+  },
+  viewNodata: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  textNodata: {
+    fontSize: 20,
   },
 });

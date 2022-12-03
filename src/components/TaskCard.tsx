@@ -79,7 +79,13 @@ const TaskCard = (props: TaskCardProps) => {
           </Text>
 
           <Text style={[styles.dateText, styles.text]}>
-            {moment().isBetween(moment(task.start_time), moment(task.end_time))
+            {moment().isAfter(task.end_time)
+              ? 'Overdue ' +
+                moment(moment(task.end_time).format('YYYY-MM-DD')).toNow(true)
+              : moment().isBetween(
+                  moment(task.start_time),
+                  moment(task.end_time),
+                )
               ? 'Due in ' +
                 moment(moment(task.end_time).format('YYYY-MM-DD')).toNow(true)
               : 'Start after ' +
@@ -92,7 +98,7 @@ const TaskCard = (props: TaskCardProps) => {
         <Progress.Bar
           style={styles.progressBar}
           progress={task?.progress / 100}
-          width={330}
+          width={350}
           color={
             task?.progress <= 30
               ? 'red'

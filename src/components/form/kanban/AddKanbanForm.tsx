@@ -23,8 +23,6 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
   const [endDate, setEndDate] = useState(new Date());
 
   const memberList = member.map(item => {
-    console.log(item);
-
     return item;
   });
 

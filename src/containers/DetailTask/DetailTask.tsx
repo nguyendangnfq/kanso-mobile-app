@@ -95,14 +95,14 @@ const DetailTask = (props: DetailTaskProps) => {
     }
     setSelectedDetailTask(newVal);
     dispatch(setProgress(parseInt(newVal.length * 100) / detailTask.length));
-    // dispatch(
-    //   changeCompletedDetailTaskAsync({
-    //     idDetailTask: value,
-    //     idTask: data?.id,
-    //     completed_by: token || vice_token,
-    //     progress: parseInt((newVal.length * 100) / detailTask.length),
-    //   }),
-    // );
+    dispatch(
+      changeCompletedDetailTaskAsync({
+        idDetailTask: value,
+        idTask: data?.id,
+        completed_by: token || vice_token,
+        progress: parseInt((newVal.length * 100) / detailTask.length),
+      }),
+    );
   };
 
   const handleCheckCompleted = (value: any) => {

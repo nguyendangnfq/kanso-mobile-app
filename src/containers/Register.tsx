@@ -61,7 +61,7 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <Background>
+    <View style={styles.container}>
       <Header>Create Account</Header>
       <TextInput
         label="Username"
@@ -121,11 +121,20 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
-    </Background>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#fff',
+    alignSelf: 'center',
+  },
   row: {
     flexDirection: 'row',
     marginTop: 4,

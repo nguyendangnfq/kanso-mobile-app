@@ -1,24 +1,28 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
-import { Button } from '../components';
 import { Board, BoardSetting } from '../containers';
-import { useNavigation } from '@react-navigation/native';
+import { useAppSelector } from '../store/hooks';
 
 const Drawer = createDrawerNavigator();
 
 const BoardNavigation = (props: any) => {
   const { route } = props;
   const data = route.params;
-  const navigation = useNavigation();
+
+  const role = useAppSelector(state => state.project.role);
+
   return (
     <>
       <Drawer.Navigator initialRouteName="Board">
         <Drawer.Screen name="Board" component={Board} initialParams={data} />
-        <Drawer.Screen name="Setting" component={BoardSetting} />
+        {(role === 'Project Manager' || role === 'Leader') && [
+          <Drawer.Screen
+            name="Setting"
+            component={BoardSetting}
+            initialParams={data}
+          />,
+        ]}
       </Drawer.Navigator>
-      {/* <Button mode="outlined" onPress={() => navigation.goBack()}>
-        Back
-      </Button> */}
     </>
   );
 };

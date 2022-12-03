@@ -4,13 +4,14 @@ import { Text } from 'react-native-paper';
 import { theme } from '../theme/theme';
 import { nameValidator } from '../helpers/nameValidator';
 import { passwordValidator } from '../helpers/passwordValidator';
-import { useAppDispatch } from './../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { login } from '../store/user/loginSlice';
 import { Background, Button, Header, TextInput } from '../components';
 
 export default function LoginScreen({ navigation }: any) {
   const [name, setName] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
+  const loading = useAppSelector(state => state.login.loading);
 
   const dispatch = useAppDispatch();
 
@@ -56,7 +57,7 @@ export default function LoginScreen({ navigation }: any) {
         errorText={password.error}
         secureTextEntry
       />
-      <Button mode="contained" onPress={onLoginPressed}>
+      <Button mode="contained" onPress={onLoginPressed} loading={loading}>
         Login
       </Button>
       <View style={styles.row}>

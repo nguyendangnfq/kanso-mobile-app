@@ -123,11 +123,7 @@ const Completed = (props: any) => {
                     </>
                   );
                 } else {
-                  return (
-                    <View style={styles.noDataContainer}>
-                      <Text>NO DATA</Text>
-                    </View>
-                  );
+                  return null;
                 }
               }),
             )}

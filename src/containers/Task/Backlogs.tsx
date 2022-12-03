@@ -194,7 +194,6 @@ const Backlogs = (props: any) => {
                           />
                         </Modal>
                       </Portal>
-                      <Text>NO DATA</Text>
                     </View>
                   );
                 }

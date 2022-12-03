@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Pressable, StyleSheet, ScrollView } from 'react-native';
+import { View, Pressable, StyleSheet, ScrollView, Text } from 'react-native';
 import { FAB, Modal, Portal, Provider, Snackbar } from 'react-native-paper';
 import { AddKanbanForm, EditKanbanForm } from '../../components';
 import KanbanCard from '../../components/KanbanCard';
@@ -131,7 +131,7 @@ const Kanban = (props: any) => {
       <ScrollView contentContainerStyle={styles.outer}>
         {!loading ? (
           <View style={styles.container}>
-            {boardData.length !== 0 &&
+            {boardData.length !== 0 ? (
               boardData.map(item => {
                 if (!item.is_completed) {
                   return (
@@ -149,7 +149,12 @@ const Kanban = (props: any) => {
                     </Pressable>
                   );
                 }
-              })}
+              })
+            ) : (
+              <View style={styles.viewNodata}>
+                <Text style={styles.textNodata}>No data</Text>
+              </View>
+            )}
             <FAB
               icon={require('../../assets/plus.png')}
               style={styles.fab}
@@ -191,5 +196,13 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+  },
+  viewNodata: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  textNodata: {
+    fontSize: 20,
   },
 });
