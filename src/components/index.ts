@@ -13,3 +13,6 @@ export { default as AddKanbanForm } from './form/kanban/AddKanbanForm';
 export { default as EditKanbanForm } from './form/kanban/EditKanbanForm';
 export { default as AddTaskForm } from './form/task/AddTaskForm';
 export { default as EditTaskForm } from './form/task/EditTaskForm';
+export { default as DetailTaskCard } from './DetailTaskCard';
+export { default as AddDetailTaskForm } from './form/detailTask/AddDetailTaskForm';
+export { default as EditDetailTaskForm } from './form/detailTask/EditDetailTaskForm';

@@ -21,6 +21,7 @@ const Completed = (props: any) => {
   const taskInfo = useAppSelector(state => state.task.jobInfo);
 
   const data = route.params.item;
+  const kanbanData = route.params.data;
 
   const idBoard = data.id_job;
 
@@ -101,7 +102,13 @@ const Completed = (props: any) => {
                         </Modal>
                       </Portal>
                       <Pressable
-                        onPress={() => navigation.navigate('Detail Task', task)}
+                        onPress={() =>
+                          navigation.navigate('Detail Task', {
+                            task,
+                            idBoard,
+                            kanbanData,
+                          })
+                        }
                       >
                         <TaskCard
                           onToggleEditModal={onToggleEditModal}
@@ -154,7 +161,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
-    justifyContent: 'space-between',
   },
   noDataContainer: {
     justifyContent: 'center',

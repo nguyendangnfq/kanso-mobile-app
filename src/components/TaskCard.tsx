@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
   text: {
     color: '#fff',

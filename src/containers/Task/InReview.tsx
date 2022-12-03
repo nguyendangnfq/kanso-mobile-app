@@ -21,6 +21,7 @@ const InReview = (props: any) => {
   const taskInfo = useAppSelector(state => state.task.jobInfo);
 
   const data = route.params.item;
+  const kanbanData = route.params.data;
 
   const idBoard = data.id_job;
 
@@ -101,7 +102,13 @@ const InReview = (props: any) => {
                         </Modal>
                       </Portal>
                       <Pressable
-                        onPress={() => navigation.navigate('Detail Task', task)}
+                        onPress={() =>
+                          navigation.navigate('Detail Task', {
+                            task,
+                            idBoard,
+                            kanbanData,
+                          })
+                        }
                       >
                         <TaskCard
                           onToggleEditModal={onToggleEditModal}

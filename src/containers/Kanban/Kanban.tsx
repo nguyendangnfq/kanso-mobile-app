@@ -11,6 +11,7 @@ import {
 } from '../../store/board/boardSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import PokeLoader from './../../components/PokeLoader';
+import { checkRoleUser } from '../../store/project/projectSlice';
 
 const Kanban = (props: any) => {
   const { route, navigation } = props;
@@ -36,6 +37,12 @@ const Kanban = (props: any) => {
       fetchAllBoard({
         projectowner: data?.idProject,
         owner: token || vice_token,
+      }),
+    );
+    dispatch(
+      checkRoleUser({
+        id: token || vice_token,
+        idProject: data?.idProject,
       }),
     );
   }, []);

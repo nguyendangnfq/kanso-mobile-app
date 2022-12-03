@@ -1,9 +1,9 @@
 import { secondInstance } from '../api';
 
-export const taskApi = {
-  fetch: (params: any) => {
+export const detailTaskApi = {
+  fetchDetailTask: (params: any) => {
     return secondInstance
-      .post('/Tasks/ListTasks/kaban', params)
+      .post('/Tasks/listAllDetailTask', params)
       .then(response => {
         return response.data;
       })
@@ -12,9 +12,38 @@ export const taskApi = {
       });
   },
 
-  autoChangeColumn: (params: any) => {
+  createDetailTask: (params: any) => {
     return secondInstance
-      .post('/Tasks/changeColumnTask', {
+      .post('Tasks/createNewDetailTask', {
+        taskOwner: params.idTask,
+        title: params.title,
+        idProjectOwner: params.idProjectOwner,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+
+  editDetailTask: (params: any) => {
+    return secondInstance
+      .post('/Tasks/editDetailTask', {
+        idDetailTask: params.idDetailTask,
+        name: params.name,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+
+  deleteDetailTask: (params: any) => {
+    return secondInstance
+      .post('/Tasks/deleteDetailTask', {
         ...params,
       })
       .then(response => {
@@ -25,44 +54,9 @@ export const taskApi = {
       });
   },
 
-  createTask: (params: any) => {
+  changeCompletedDetailTask: (params: any) => {
     return secondInstance
-      .post('/Tasks/create_a_new_task/', params)
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  },
-
-  editTask: (params: any) => {
-    return secondInstance
-      .post('/Tasks/editTask', {
-        ...params,
-      })
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  },
-
-  deleteTask: (params: any) => {
-    return secondInstance
-      .post('/Tasks/deleteTask', params)
-      .then(response => {
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  },
-
-  checkCompleted: (params: any) => {
-    return secondInstance
-      .post('/Tasks/completeAndUncompleteTask', {
+      .post('/Tasks/completeAndUncompleteDetailTask', {
         ...params,
       })
       .then(response => {

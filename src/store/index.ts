@@ -6,6 +6,7 @@ import userSettingReducer from './user/userSettingSlice';
 import projectReducer from './project/projectSlice';
 import boardReducer from './board/boardSlice';
 import taskReducer from './task/taskSlice';
+import detailTaskReducer from './detailTask/detailTaskSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     project: projectReducer,
     board: boardReducer,
     task: taskReducer,
+    detailTask: detailTaskReducer,
   },
 });
 

@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { secondInstance } from '../api';
 
 export const userApi = {
@@ -31,6 +30,21 @@ export const userApi = {
     return await secondInstance
       .post(url, {
         owner: params,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+
+  checkRole: async (params: any) => {
+    const url = '/user/checkRoleUserInProject';
+    return secondInstance
+      .post(url, {
+        id: params.id,
+        idProject: params.idProject,
       })
       .then(response => {
         return response.data;

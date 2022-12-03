@@ -156,7 +156,13 @@ const Backlogs = (props: any) => {
                         </Modal>
                       </Portal>
                       <Pressable
-                        onPress={() => navigation.navigate('Detail Task', task)}
+                        onPress={() =>
+                          navigation.navigate('Detail Task', {
+                            task,
+                            idBoard,
+                            kanbanData,
+                          })
+                        }
                       >
                         <TaskCard
                           onToggleEditModal={onToggleEditModal}

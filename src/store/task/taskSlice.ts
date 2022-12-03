@@ -45,6 +45,14 @@ export const deleteTask = createAsyncThunk(
   },
 );
 
+export const checkCompleted = createAsyncThunk(
+  'board/check-finished',
+  async (params: any) => {
+    let res = await taskApi.checkCompleted(params);
+    return res;
+  },
+);
+
 type taskStateType = {
   loading: boolean;
   loadingCompleted: boolean;
@@ -212,6 +220,18 @@ export const taskSlice = createSlice({
       .addCase(editTask.fulfilled, (state, action) => {
         state.loading = false;
         state.changeColumnDone = true;
+        console.log(action.payload);
+      });
+    // ------------- Check complete ------------>
+    builder
+      .addCase(checkCompleted.pending, state => {
+        state.loadingCompleted = true;
+      })
+      .addCase(checkCompleted.rejected, state => {
+        state.loadingCompleted = false;
+      })
+      .addCase(checkCompleted.fulfilled, (state, action) => {
+        state.loadingCompleted = false;
         console.log(action.payload);
       });
   },
