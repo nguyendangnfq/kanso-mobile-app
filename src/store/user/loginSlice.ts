@@ -31,21 +31,23 @@ export const LoginSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.id;
-        const setStorage = async () => {
-          try {
-            await AsyncStorage.setItem(
-              'access_token',
-              JSON.stringify(action.payload.id),
-            );
-          } catch (error) {
-            console.log(error);
+        if (action.payload.isSuccess === true) {
+          state.token = action.payload.id;
+          const setStorage = async () => {
+            try {
+              await AsyncStorage.setItem(
+                'access_token',
+                JSON.stringify(action.payload.id),
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          };
+          if (action.payload.isSuccess) {
+            setStorage();
+          } else {
+            console.log('Login Failed');
           }
-        };
-        if (action.payload.isSuccess) {
-          setStorage();
-        } else {
-          console.log('Login Failed');
         }
       });
   },

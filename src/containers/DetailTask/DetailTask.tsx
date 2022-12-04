@@ -107,12 +107,11 @@ const DetailTask = (props: DetailTaskProps) => {
 
   const handleCheckCompleted = (value: any) => {
     setIsSwitchOn(!isSwitchOn);
-    if (value === true) {
-      dispatch(setIsCompleted(value));
-      dispatch(
-        checkCompleted({ is_complete: value, idTask: idDetailTask, idBoard }),
-      );
-    }
+
+    dispatch(setIsCompleted(value));
+    dispatch(
+      checkCompleted({ is_complete: value, idTask: idDetailTask, idBoard }),
+    );
   };
 
   const handleCreateNewDetailTask = (value: any) => {
