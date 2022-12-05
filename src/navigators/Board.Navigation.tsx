@@ -17,7 +17,7 @@ const BoardNavigation = (props: any) => {
         <Drawer.Screen name="Board" component={Board} initialParams={data} />
         {(role === 'Project Manager' || role === 'Leader') && [
           <Drawer.Screen
-            name="Setting"
+            name="Project Setting"
             component={BoardSetting}
             initialParams={data}
           />,

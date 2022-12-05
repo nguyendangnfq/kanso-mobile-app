@@ -1,5 +1,5 @@
 import React from 'react';
-import { Divider, Text } from 'react-native-paper';
+import { Divider, Snackbar, Text } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
 import { Button, TextInput } from '../../components';
 import { Controller, useForm } from 'react-hook-form';
@@ -13,12 +13,16 @@ type BoardSettingProps = {
 
 const BoardSetting = (props: BoardSettingProps) => {
   const { route, navigation } = props;
+  const [snackvisible, setSnackVisible] = React.useState(false);
 
   const dispatch = useAppDispatch();
   const idProject = route.params.idProject;
   const token = useAppSelector(state => state.login.token);
   const vice_token = useAppSelector(state => state.register.token);
 
+  const onDismissSnackBar = () => setSnackVisible(false);
+
+  const onToggleSnackBar = () => setSnackVisible(!snackvisible);
   const handleChangeName = async (value: any) => {
     const newValue = {
       newNameProject: value.name,
@@ -45,48 +49,65 @@ const BoardSetting = (props: BoardSettingProps) => {
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Project Name</Text>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              onChangeText={onChange}
-              value={value}
-              label="Project Name"
-            />
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <View style={styles.formContainer}>
+          <Text style={styles.label}>Project Name</Text>
+          <Controller
+            control={control}
+            rules={{
+              required: true,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                onChangeText={onChange}
+                value={value}
+                label="Project Name"
+              />
+            )}
+            name="name"
+          />
+          {errors.name && (
+            <Text style={styles.textError}>This is required.</Text>
           )}
-          name="name"
-        />
-        {errors.name && <Text style={styles.textError}>This is required.</Text>}
-        <Button mode="contained" onPress={handleSubmit(handleChangeName)}>
-          Rename
-        </Button>
-      </View>
-      <View style={styles.highRiskContainer}>
-        <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>
-          High risk settings
-        </Text>
-        <Divider style={{ marginBottom: 20 }} />
-        <View style={styles.titleView}>
-          <Text style={styles.titleText}>Delete this project</Text>
-          <Text style={styles.descriptionText}>
-            Once you delete a repository, there is no going back. Please be
-            certain.
-          </Text>
+          <Button mode="contained" onPress={handleSubmit(handleChangeName)}>
+            Rename
+          </Button>
         </View>
-        <Button
-          mode="contained"
-          style={styles.deleteButton}
-          onPress={handleDeleteProject}
-        >
-          Delete Project
-        </Button>
+        <View style={styles.highRiskContainer}>
+          <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>
+            High risk settings
+          </Text>
+          <Divider style={{ marginBottom: 20 }} />
+          <View style={styles.titleView}>
+            <Text style={styles.titleText}>Delete this project</Text>
+            <Text style={styles.descriptionText}>
+              Once you delete a repository, there is no going back. Please be
+              certain.
+            </Text>
+          </View>
+          <Button
+            mode="contained"
+            style={styles.deleteButton}
+            onPress={onToggleSnackBar}
+          >
+            Delete Project
+          </Button>
+        </View>
       </View>
+      <Snackbar
+        style={{ flex: 1 }}
+        visible={snackvisible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Sure',
+          onPress: () => {
+            handleDeleteProject();
+          },
+        }}
+      >
+        Are you sure to delete this board ?
+      </Snackbar>
     </View>
   );
 };
@@ -94,9 +115,13 @@ const BoardSetting = (props: BoardSettingProps) => {
 export default BoardSetting;
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 20,
+    width: '100%',
   },
   titleView: {
     marginBottom: 10,

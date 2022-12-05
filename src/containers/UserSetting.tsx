@@ -22,6 +22,8 @@ const UserSetting = () => {
   const profile = useAppSelector(state => state?.userSetting);
   const loading = useAppSelector(state => state.userSetting.loading);
 
+  console.log(profile);
+
   const onSignUpPressed = async () => {
     try {
       const nameError = nameValidator(name.value);
