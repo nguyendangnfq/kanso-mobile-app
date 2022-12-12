@@ -32,7 +32,7 @@ const Home = ({ navigation }: any) => {
     <View style={styles.container}>
       {loading && <PokeLoader />}
 
-      {!loading && profile?.projects?.length !== 0 && (
+      {!loading && profile?.projects?.length !== 0 ? (
         <>
           <FlatList
             data={profile?.projects}
@@ -47,6 +47,13 @@ const Home = ({ navigation }: any) => {
             New Project
           </Button>
         </>
+      ) : (
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate('ProjectForm')}
+        >
+          New Project
+        </Button>
       )}
     </View>
   );

@@ -7,44 +7,51 @@ import {
   PokeLoader,
   TextInput,
 } from '../components';
-import { listUserInfo } from '../store/user/userSettingSlice';
 import { useAppDispatch, useAppSelector } from './../store/hooks';
 import Logo from './../components/Logo';
-import { nameValidator } from '../helpers/nameValidator';
 import { emailValidator } from '../helpers/emailValidator';
 import { displayNameValidator } from '../helpers/displayNameValidator';
+import { editUser } from '../store/user/userSettingSlice';
 
 const UserSetting = () => {
-  const [name, setName] = useState({ value: '', error: '' });
-  const [displayName, setDisplayName] = useState({ value: '', error: '' });
-  const [email, setEmail] = useState({ value: '', error: '' });
-
   const profile = useAppSelector(state => state?.userSetting);
+
+  const [displayName, setDisplayName] = useState({
+    value: profile?.display_name,
+    error: '',
+  });
+  const [email, setEmail] = useState({ value: profile?.email, error: '' });
+  const [company, setCompany] = useState(profile?.company);
+  const [location, setLocation] = useState(profile?.location);
+  const [bio, setBio] = useState(profile?.bio);
+
   const loading = useAppSelector(state => state.userSetting.loading);
+  const token = useAppSelector(state => state.login.token);
+  const vice_token = useAppSelector(state => state.register.token);
+  const dispatch = useAppDispatch();
 
-  console.log(profile);
+  // console.log(profile);
 
-  const onSignUpPressed = async () => {
+  const onEditUser = async () => {
     try {
-      const nameError = nameValidator(name.value);
       const emailError = emailValidator(email.value);
       const displayNameError = displayNameValidator(displayName.value);
-      if (emailError || nameError || displayNameError) {
-        setName({ ...name, error: nameError });
+      if (emailError || displayNameError) {
         setEmail({ ...email, error: emailError });
         setDisplayName({ ...displayName, error: displayNameError });
         return;
       }
 
       const account = {
-        user_name: name.value,
+        owner: token || vice_token,
+        display_name: displayName.value,
+        bio: bio,
         email: email.value,
         avatar: '',
-        display_name: displayName.value,
-        bio: '',
-        company: '',
-        address: '',
+        company: company,
+        address: location,
       };
+      dispatch(editUser(account));
     } catch (error) {
       return null;
     }
@@ -58,17 +65,37 @@ const UserSetting = () => {
           <Header>User Infomation</Header>
           <Logo title={profile?.avatarURL} />
           <TextInput
-            label="Username"
+            label="Bio"
             returnKeyType="next"
-            value={profile?.name || name.value}
-            onChangeText={(text: any) => setName({ value: text, error: '' })}
-            error={!!name.error}
-            errorText={name.error}
+            value={bio}
+            onChangeText={(text: any) => setBio(text)}
+          />
+          <TextInput
+            label="Company"
+            returnKeyType="next"
+            value={company}
+            onChangeText={(text: any) => setCompany(text)}
+          />
+          <TextInput
+            label="Location"
+            returnKeyType="next"
+            value={location}
+            onChangeText={(text: any) => setLocation(text)}
+          />
+          <TextInput
+            label="Display Name"
+            returnKeyType="next"
+            value={displayName.value}
+            onChangeText={(text: any) =>
+              setDisplayName({ value: text, error: '' })
+            }
+            error={!!displayName.error}
+            errorText={displayName.error}
           />
           <TextInput
             label="Email"
             returnKeyType="next"
-            value={profile?.email || email.value}
+            value={email.value}
             onChangeText={(text: any) => setEmail({ value: text, error: '' })}
             error={!!email.error}
             errorText={email.error}
@@ -77,22 +104,12 @@ const UserSetting = () => {
             textContentType="emailAddress"
             keyboardType="email-address"
           />
-          <TextInput
-            label="Display Name"
-            returnKeyType="next"
-            value={profile?.display_name || displayName.value}
-            onChangeText={(text: any) =>
-              setDisplayName({ value: text, error: '' })
-            }
-            error={!!displayName.error}
-            errorText={displayName.error}
-          />
           <Button
             mode="contained"
-            onPress={onSignUpPressed}
+            onPress={onEditUser}
             style={{ marginTop: 24 }}
           >
-            Edit
+            Saved Profile
           </Button>
         </Background>
       )}

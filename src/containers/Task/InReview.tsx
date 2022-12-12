@@ -1,10 +1,11 @@
+import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, Text, Pressable } from 'react-native';
 import { Provider, Snackbar, Modal, Portal } from 'react-native-paper';
 import { EditTaskForm, PokeLoader, TaskCard } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { deleteTask, editTask } from '../../store/task/taskSlice';
+import { deleteTask, editTask, fetchTask } from '../../store/task/taskSlice';
 
 const InReview = (props: any) => {
   const { route, navigation } = props;
@@ -19,11 +20,18 @@ const InReview = (props: any) => {
   const columns = useAppSelector(state => state.task.listTask);
   const loading = useAppSelector(state => state.task.loading);
   const taskInfo = useAppSelector(state => state.task.jobInfo);
+  const isFocused = useIsFocused();
 
   const data = route.params.item;
   const kanbanData = route.params.data;
 
   const idBoard = data.id_job;
+
+  useEffect(() => {
+    if (isFocused === true) {
+      dispatch(fetchTask({ jobowner: idBoard }));
+    }
+  }, [isFocused]);
 
   const onDismissSnackBar = () => setSnackVisible(false);
   const onToggleSnackBar = (value: any) => {

@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { Card, Button } from 'react-native-paper';
+import { Button, Card } from 'react-native-paper';
 
 type DetailCardProps = {
   item: any;
   handleSelected: (value: never) => void;
   checked: boolean;
   setChecked: (val: any) => void;
-  handleDeleteDetailTask: (value: any) => void;
   showEditModal: (value: any) => void;
+  onToggleSnackBar: (value: any) => void;
 };
 
 const DetailTaskCard = (props: DetailCardProps) => {
@@ -18,9 +18,11 @@ const DetailTaskCard = (props: DetailCardProps) => {
     handleSelected,
     checked,
     setChecked,
-    handleDeleteDetailTask,
     showEditModal,
+    onToggleSnackBar,
   } = props;
+
+  // console.log(item);
 
   return (
     <View style={styles.container}>
@@ -32,7 +34,6 @@ const DetailTaskCard = (props: DetailCardProps) => {
             <View style={styles.optionView}>
               <BouncyCheckbox
                 isChecked={checked}
-                ref={(ref: any) => (bouncyCheckboxRef = ref)}
                 fillColor="#34eb83"
                 unfillColor="#FFFFFF"
                 onPress={() => {
@@ -45,9 +46,7 @@ const DetailTaskCard = (props: DetailCardProps) => {
         />
         <Card.Actions>
           <Button onPress={() => showEditModal(item.id)}>Edit</Button>
-          <Button onPress={() => handleDeleteDetailTask(item.id)}>
-            Delete
-          </Button>
+          <Button onPress={() => onToggleSnackBar(item.id)}>Delete</Button>
         </Card.Actions>
       </Card>
     </View>

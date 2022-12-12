@@ -14,7 +14,7 @@ export const createDetailTask = createAsyncThunk(
   'detailTask/createDetailTask',
   async (params: any, thunkAPI) => {
     const res = await detailTaskApi.createDetailTask(params);
-    thunkAPI.dispatch(fetchDetailTask({ taskOwner: params.idTask }));
+    await thunkAPI.dispatch(fetchDetailTask({ taskOwner: params.idTask }));
     return res;
   },
 );
@@ -23,7 +23,7 @@ export const deleteDetailTask = createAsyncThunk(
   'detailTask/deleteDetailTask',
   async (params: any, thunkAPI) => {
     const res = await detailTaskApi.deleteDetailTask(params);
-    thunkAPI.dispatch(fetchDetailTask({ taskOwner: params.idTask }));
+    await thunkAPI.dispatch(fetchDetailTask({ taskOwner: params.idTask }));
     return res;
   },
 );
@@ -32,7 +32,7 @@ export const editDetailTask = createAsyncThunk(
   'detailTask/editDetailTask',
   async (params: any, thunkAPI) => {
     const res = await detailTaskApi.editDetailTask(params);
-    thunkAPI.dispatch(fetchDetailTask({ taskOwner: params.idTask }));
+    await thunkAPI.dispatch(fetchDetailTask({ taskOwner: params.idTask }));
     return res;
   },
 );
@@ -144,6 +144,7 @@ export const detailTaskSlice = createSlice({
         console.log(action.payload);
       });
 
+    // change complete
     builder
       .addCase(changeCompletedDetailTaskAsync.pending, state => {
         state.loading = true;

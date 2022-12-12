@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { theme } from '../theme/theme';
 import { nameValidator } from '../helpers/nameValidator';
@@ -12,8 +12,15 @@ export default function LoginScreen({ navigation }: any) {
   const [name, setName] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const loading = useAppSelector(state => state.login.loading);
+  const status = useAppSelector(state => state.login.status);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (status) {
+      navigation.navigate('Main');
+    }
+  }, [status]);
 
   const onLoginPressed = async () => {
     try {
@@ -30,7 +37,6 @@ export default function LoginScreen({ navigation }: any) {
         password: password.value,
       };
       await dispatch(login(dataLogin));
-      navigation.replace('Main');
     } catch (error) {
       return null;
     }

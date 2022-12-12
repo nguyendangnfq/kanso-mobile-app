@@ -175,7 +175,7 @@ const EditKanbanForm = (props: EditKanbanFormProps) => {
         )}
       </View>
 
-      <View>
+      {/* <View>
         <Text style={styles.label}>Parent Job</Text>
         <Controller
           control={control}
@@ -194,7 +194,7 @@ const EditKanbanForm = (props: EditKanbanFormProps) => {
           )}
           name="parent"
         />
-      </View>
+      </View> */}
 
       <Button mode="contained" onPress={handleSubmit(onSubmit)}>
         Modify

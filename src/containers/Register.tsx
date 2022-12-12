@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { theme } from '../theme/theme';
 import { emailValidator } from '../helpers/emailValidator';
@@ -7,18 +7,27 @@ import { passwordValidator } from '../helpers/passwordValidator';
 import { nameValidator } from '../helpers/nameValidator';
 import { phoneValidator } from '../helpers/phoneValidator';
 import { displayNameValidator } from '../helpers/displayNameValidator';
-import { useAppDispatch } from './../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { register } from '../store/user/registerSlice';
-import { Button, TextInput, Background, Header } from '../components';
+import { Button, Header, TextInput } from '../components';
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation }: any) {
   const [name, setName] = useState({ value: '', error: '' });
   const [phone, setPhone] = useState({ value: '', error: '' });
   const [displayName, setDisplayName] = useState({ value: '', error: '' });
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
 
+  const loading = useAppSelector(state => state.register.loading);
+  const status = useAppSelector(state => state.register.status);
+
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (status) {
+      navigation.navigate('Main');
+    }
+  }, [status]);
 
   const onSignUpPressed = async () => {
     try {
@@ -54,7 +63,6 @@ export default function RegisterScreen({ navigation }) {
         address: '',
       };
       await dispatch(register(account));
-      navigation.replace('Main');
     } catch (error) {
       return null;
     }
@@ -112,6 +120,7 @@ export default function RegisterScreen({ navigation }) {
         mode="contained"
         onPress={onSignUpPressed}
         style={{ marginTop: 24 }}
+        loading={loading}
       >
         Sign Up
       </Button>

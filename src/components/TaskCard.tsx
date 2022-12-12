@@ -98,7 +98,7 @@ const TaskCard = (props: TaskCardProps) => {
         <Progress.Bar
           style={styles.progressBar}
           progress={task?.progress / 100}
-          width={350}
+          width={340}
           color={
             task?.progress <= 30
               ? 'red'

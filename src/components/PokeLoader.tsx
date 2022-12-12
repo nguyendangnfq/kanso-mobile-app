@@ -4,12 +4,12 @@ import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
 const PokeLoader = () => {
   return (
     <View style={styles.wrapper}>
-      <Image
-        source={{
-          uri: 'https://img1.picmix.com/output/stamp/normal/0/9/0/4/1604090_a14a5.gif',
-        }}
-        style={styles.img}
-      />
+      {/*<Image*/}
+      {/*  source={{*/}
+      {/*    uri: 'https://img1.picmix.com/output/stamp/normal/0/9/0/4/1604090_a14a5.gif',*/}
+      {/*  }}*/}
+      {/*  style={styles.img}*/}
+      {/*/>*/}
       <ActivityIndicator size="large" color="#0064e1" />
     </View>
   );

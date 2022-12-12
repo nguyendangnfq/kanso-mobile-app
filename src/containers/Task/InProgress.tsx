@@ -1,10 +1,11 @@
+import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, Text, Pressable } from 'react-native';
 import { Snackbar, Provider, Portal, Modal } from 'react-native-paper';
 import { EditTaskForm, PokeLoader, TaskCard } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { deleteTask, editTask } from '../../store/task/taskSlice';
+import { deleteTask, editTask, fetchTask } from '../../store/task/taskSlice';
 
 const InProgress = (props: any) => {
   const { route, navigation } = props;
@@ -19,6 +20,7 @@ const InProgress = (props: any) => {
   const columns = useAppSelector(state => state.task.listTask);
   const loading = useAppSelector(state => state.task.loading);
   const taskInfo = useAppSelector(state => state.task.jobInfo);
+  const isFocused = useIsFocused();
 
   const data = route.params.item;
   const kanbanData = route.params.data;
@@ -26,6 +28,12 @@ const InProgress = (props: any) => {
   const idBoard = data.id_job;
 
   const containerStyle = { backgroundColor: 'white', padding: 20, margin: 10 };
+
+  useEffect(() => {
+    if (isFocused === true) {
+      dispatch(fetchTask({ jobowner: idBoard }));
+    }
+  }, [isFocused]);
 
   const showEditModal = () => setEditFormVisible(true);
   const hideEditModal = () => setEditFormVisible(false);

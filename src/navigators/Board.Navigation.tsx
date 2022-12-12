@@ -14,12 +14,18 @@ const BoardNavigation = (props: any) => {
   return (
     <>
       <Drawer.Navigator initialRouteName="Board">
-        <Drawer.Screen name="Board" component={Board} initialParams={data} />
+        <Drawer.Screen
+          name="Board"
+          component={Board}
+          initialParams={data}
+          key={data.id}
+        />
         {(role === 'Project Manager' || role === 'Leader') && [
           <Drawer.Screen
             name="Project Setting"
             component={BoardSetting}
             initialParams={data}
+            key={data.id}
           />,
         ]}
       </Drawer.Navigator>

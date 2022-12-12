@@ -9,6 +9,15 @@ export const listUserInfo = createAsyncThunk(
   },
 );
 
+export const editUser = createAsyncThunk(
+  'user/editUser',
+  async (params: any, thunkAPI) => {
+    const res = await userApi.editUser(params);
+    await thunkAPI.dispatch(listUserInfo(params.owner));
+    return res;
+  },
+);
+
 const initialState = {
   name: '',
   bio: '',
@@ -67,6 +76,18 @@ export const userSettingSlice = createSlice({
           });
           state.allTask = payload[1]?.allTask;
         }
+      });
+
+    builder
+      .addCase(editUser.pending, state => {
+        state.loading = true;
+      })
+      .addCase(editUser.rejected, state => {
+        state.loading = false;
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
       });
   },
 });

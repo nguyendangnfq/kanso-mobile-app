@@ -39,6 +39,24 @@ export const userApi = {
       });
   },
 
+  editUser: (params: any) => {
+    return secondInstance
+      .post('/user/editUserInfo', {
+        owner: params.owner,
+        display_name: params.display_name,
+        bio: params.bio,
+        company: params.company,
+        location: params.location,
+        email: params.email,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+
   checkRole: async (params: any) => {
     const url = '/user/checkRoleUserInProject';
     return secondInstance

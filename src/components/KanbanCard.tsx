@@ -60,9 +60,9 @@ const KanbanCard = (props: KanbanCardProps) => {
               unfilledColor={'#fff'}
             />
           )}
-          <Text
-            style={[styles.progressText, styles.text]}
-          >{`${item.progress} %`}</Text>
+          <Text style={[styles.progressText, styles.text]}>{`${
+            Math.round(item.progress * 100) / 100
+          } %`}</Text>
           <View style={{ marginTop: 10 }}>
             <Text style={[styles.priorityText, styles.text]}>
               {item?.priority}

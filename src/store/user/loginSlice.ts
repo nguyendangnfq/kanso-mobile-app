@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userApi } from '../../services/modules/user';
+import { Alert } from 'react-native';
 
 export const login = createAsyncThunk('user/login', async (params: any) => {
   const res = await userApi.login(params);
@@ -10,11 +11,15 @@ export const login = createAsyncThunk('user/login', async (params: any) => {
 export type LoginState = {
   loading: boolean;
   token: string;
+  message: string;
+  status: boolean;
 };
 
 const initialState: LoginState = {
   loading: false,
   token: '',
+  message: '',
+  status: false,
 };
 
 export const LoginSlice = createSlice({
@@ -31,8 +36,10 @@ export const LoginSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        if (action.payload.isSuccess === true) {
+
+        if (action.payload?.isSuccess) {
           state.token = action.payload.id;
+          state.status = true;
           const setStorage = async () => {
             try {
               await AsyncStorage.setItem(
@@ -43,11 +50,10 @@ export const LoginSlice = createSlice({
               console.log(error);
             }
           };
-          if (action.payload.isSuccess) {
-            setStorage();
-          } else {
-            console.log('Login Failed');
-          }
+          setStorage();
+        } else if (action.payload?.error) {
+          state.status = false;
+          Alert.alert('Account is invalid!', 'Please try again');
         }
       });
   },

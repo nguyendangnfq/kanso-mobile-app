@@ -211,7 +211,7 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
         )}
       </View>
 
-      <View>
+      {/* <View>
         <Text style={styles.label}>Parent Job</Text>
         <Controller
           control={control}
@@ -230,7 +230,7 @@ const AddKanbanForm = (props: AddKanbanFormProps) => {
           )}
           name="parent"
         />
-      </View>
+      </View> */}
 
       <Button mode="contained" onPress={handleSubmit(onSubmit)}>
         Create

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import {
   FAB,
   MD3Colors,
@@ -8,6 +8,7 @@ import {
   Portal,
   ProgressBar,
   Provider,
+  Snackbar,
   Switch,
 } from 'react-native-paper';
 import {
@@ -35,9 +36,11 @@ const DetailTask = (props: DetailTaskProps) => {
   const { route } = props;
   const [visible, setVisible] = useState(false);
   const [editVisible, setEditVisible] = useState(false);
+  const [snackVisible, setSnackVisible] = useState(false);
   const [checked, setChecked] = useState(false);
   const [editData, setEditData] = useState({});
   const [idEdit, setIdEdit] = useState('');
+  const [idDelete, setIdDelete] = useState('');
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [selectedDetailTask, setSelectedDetailTask] = useState([]);
   const dispatch = useAppDispatch();
@@ -45,6 +48,16 @@ const DetailTask = (props: DetailTaskProps) => {
   useEffect(() => {
     dispatch(fetchDetailTask({ taskOwner: data?.id }));
   }, []);
+
+  useEffect(() => {
+    if (detailTask) {
+      const initialSelected = detailTask
+        .filter((item: any) => item.is_complete)
+        .map((item: any) => item.id);
+      setSelectedDetailTask(initialSelected);
+      console.log(initialSelected);
+    }
+  }, [detailTask]);
 
   const detailTask = useAppSelector(
     state => state.detailTask.infoAllDetailTask,
@@ -76,15 +89,12 @@ const DetailTask = (props: DetailTaskProps) => {
 
   const end_time = moment(data?.end_time).format('MMMM DD');
 
-  useEffect(() => {
-    if (detailTask) {
-      const initialSelected = detailTask
-        .filter((item: any) => item.is_complete)
-        .map((item: any) => item.id);
-      setSelectedDetailTask(initialSelected);
-      console.log(initialSelected);
-    }
-  }, [detailTask]);
+  const onDismissSnackBar = () => setSnackVisible(false);
+
+  const onToggleSnackBar = (value: any) => {
+    setSnackVisible(!snackVisible);
+    setIdDelete(value);
+  };
 
   const handleSelected = (value: never) => {
     let newVal: any = [];
@@ -94,10 +104,12 @@ const DetailTask = (props: DetailTaskProps) => {
       newVal = selectedDetailTask.filter(item => item !== value);
     }
     setSelectedDetailTask(newVal);
+    console.log(newVal);
+
     dispatch(setProgress(parseInt(newVal.length * 100) / detailTask.length));
     dispatch(
       changeCompletedDetailTaskAsync({
-        idDetailTask: value,
+        idDetailTask: newVal,
         idTask: data?.id,
         completed_by: token || vice_token,
         progress: parseInt((newVal.length * 100) / detailTask.length),
@@ -143,6 +155,7 @@ const DetailTask = (props: DetailTaskProps) => {
       idTask: data?.id,
     };
     dispatch(deleteDetailTask(deltetedValue));
+    setSnackVisible(false);
   };
 
   return (
@@ -168,6 +181,7 @@ const DetailTask = (props: DetailTaskProps) => {
           />
         </Modal>
       </Portal>
+
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.titleWrapper}>
@@ -198,16 +212,15 @@ const DetailTask = (props: DetailTaskProps) => {
             style={styles.progressBar}
           />
         </View>
-
         <ScrollView contentContainerStyle={styles.content}>
           {detailTask.map((item: any) => (
             <DetailTaskCard
               item={item}
               handleSelected={handleSelected}
-              checked={checked}
+              checked={item.is_complete}
               setChecked={setChecked}
               showEditModal={showEditModal}
-              handleDeleteDetailTask={handleDeleteDetailTask}
+              onToggleSnackBar={onToggleSnackBar}
             />
           ))}
         </ScrollView>
@@ -217,6 +230,18 @@ const DetailTask = (props: DetailTaskProps) => {
           onPress={showModal}
         />
       </View>
+      <Snackbar
+        visible={snackVisible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Sure',
+          onPress: () => {
+            handleDeleteDetailTask(idDelete);
+          },
+        }}
+      >
+        Are you sure to delete this board ?
+      </Snackbar>
     </Provider>
   );
 };

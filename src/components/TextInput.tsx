@@ -15,6 +15,7 @@ type TextInputProps = {
   autoCapitalize?: any;
   autoCompleteType?: any;
   onChangeText?: (value: any) => void;
+  secureTextEntry?: any;
 };
 
 export default function TextInput({

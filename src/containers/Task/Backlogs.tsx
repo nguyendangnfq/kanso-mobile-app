@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
-import {
-  FAB,
-  Provider,
-  Portal,
-  Modal,
-  Snackbar,
-  Text,
-} from 'react-native-paper';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { FAB, Modal, Portal, Provider, Snackbar } from 'react-native-paper';
 import { AddTaskForm, EditTaskForm, TaskCard } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { deleteTask, editTask, fetchTask } from '../../store/task/taskSlice';
+import {
+  createTask,
+  deleteTask,
+  editTask,
+  fetchTask,
+} from '../../store/task/taskSlice';
 import PokeLoader from '../../components/PokeLoader';
-import { createTask } from '../../store/task/taskSlice';
 import moment from 'moment';
+import { useIsFocused } from '@react-navigation/native';
 
 const Backlogs = (props: any) => {
   const { route, navigation } = props;
 
   const [visible, setVisible] = useState(false);
   const [editFormVisible, setEditFormVisible] = useState(false);
-  const [snackvisible, setSnackVisible] = useState(false);
+  const [snackVisible, setSnackVisible] = useState(false);
   const [idTask, setIdTask] = useState('');
   const [idEditTask, setIdEditTask] = useState('');
   const [editData, setEditData] = useState({});
@@ -32,6 +30,7 @@ const Backlogs = (props: any) => {
   const token = useAppSelector(state => state.login.token);
   const vice_token = useAppSelector(state => state.register.token);
   const dispatch = useAppDispatch();
+  const isFocused = useIsFocused();
 
   const data = route.params.item;
   const kanbanData = route.params.data;
@@ -49,7 +48,7 @@ const Backlogs = (props: any) => {
 
   const onDismissSnackBar = () => setSnackVisible(false);
   const onToggleSnackBar = (value: any) => {
-    setSnackVisible(!snackvisible);
+    setSnackVisible(!snackVisible);
     setIdTask(value);
   };
 
@@ -89,6 +88,12 @@ const Backlogs = (props: any) => {
     dispatch(fetchTask({ jobowner: idBoard }));
   }, []);
 
+  useEffect(() => {
+    if (isFocused === true) {
+      dispatch(fetchTask({ jobowner: idBoard }));
+    }
+  }, [isFocused]);
+
   const containerStyle = { backgroundColor: 'white', padding: 20, margin: 10 };
 
   const handleCreateTask = (value: any) => {
@@ -106,6 +111,7 @@ const Backlogs = (props: any) => {
       taskers: tempTasker,
     };
     dispatch(createTask(newValue));
+    setVisible(false);
   };
 
   const handleDeleteTask = (value: any) => {
@@ -209,7 +215,7 @@ const Backlogs = (props: any) => {
           <PokeLoader />
         )}
         <Snackbar
-          visible={snackvisible}
+          visible={snackVisible}
           onDismiss={onDismissSnackBar}
           action={{
             label: 'Sure',
