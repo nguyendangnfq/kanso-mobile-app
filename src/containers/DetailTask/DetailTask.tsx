@@ -15,6 +15,7 @@ import {
   AddDetailTaskForm,
   DetailTaskCard,
   EditDetailTaskForm,
+  PokeLoader,
 } from '../../components';
 import {
   changeCompletedDetailTaskAsync,
@@ -45,6 +46,10 @@ const DetailTask = (props: DetailTaskProps) => {
   const [selectedDetailTask, setSelectedDetailTask] = useState([]);
   const dispatch = useAppDispatch();
 
+  const detailTask = useAppSelector(
+    state => state.detailTask.infoAllDetailTask,
+  );
+
   useEffect(() => {
     dispatch(fetchDetailTask({ taskOwner: data?.id }));
   }, []);
@@ -59,13 +64,11 @@ const DetailTask = (props: DetailTaskProps) => {
     }
   }, [detailTask]);
 
-  const detailTask = useAppSelector(
-    state => state.detailTask.infoAllDetailTask,
-  );
   const info = useAppSelector(state => state.detailTask.infoTask);
   const role = useAppSelector(state => state.project.role);
   const token = useAppSelector(state => state.login.token);
   const vice_token = useAppSelector(state => state.register.token);
+  const loading = useAppSelector(state => state.detailTask.loading);
 
   const data = route.params.task;
   const idBoard = route.params.idBoard;
@@ -182,54 +185,60 @@ const DetailTask = (props: DetailTaskProps) => {
         </Modal>
       </Portal>
 
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.titleWrapper}>
-            <View style={styles.titleView}>
-              <Text style={[styles.text, styles.titleText]}>{info?.title}</Text>
-              {info?.progress === 100 &&
-                (role === 'Project Manager' || role === 'Leader') && [
-                  <View>
-                    <Text>Complete</Text>
-                    <Switch
-                      value={isSwitchOn}
-                      onValueChange={handleCheckCompleted}
-                    />
-                  </View>,
-                ]}
+      {!loading ? (
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.titleWrapper}>
+              <View style={styles.titleView}>
+                <Text style={[styles.text, styles.titleText]}>
+                  {info?.title}
+                </Text>
+                {info?.progress === 100 &&
+                  (role === 'Project Manager' || role === 'Leader') && [
+                    <View>
+                      <Text>Complete</Text>
+                      <Switch
+                        value={isSwitchOn}
+                        onValueChange={handleCheckCompleted}
+                      />
+                    </View>,
+                  ]}
+              </View>
+              <Text
+                style={[styles.text, styles.dateText]}
+              >{`Deadlines - ${end_time}`}</Text>
             </View>
-            <Text
-              style={[styles.text, styles.dateText]}
-            >{`Deadlines - ${end_time}`}</Text>
+            <View style={styles.progressWrapper}>
+              <Text style={styles.progressText}>Progress</Text>
+              <Text style={styles.progressText}>{`${info?.progress}%`}</Text>
+            </View>
+            <ProgressBar
+              progress={selectedDetailTask.length && info?.progress / 100}
+              color={MD3Colors.error50}
+              style={styles.progressBar}
+            />
           </View>
-          <View style={styles.progressWrapper}>
-            <Text style={styles.progressText}>Progress</Text>
-            <Text style={styles.progressText}>{`${info?.progress}%`}</Text>
-          </View>
-          <ProgressBar
-            progress={selectedDetailTask.length && info?.progress / 100}
-            color={MD3Colors.error50}
-            style={styles.progressBar}
+          <ScrollView contentContainerStyle={styles.content}>
+            {detailTask.map((item: any) => (
+              <DetailTaskCard
+                item={item}
+                handleSelected={handleSelected}
+                checked={item.is_complete}
+                setChecked={setChecked}
+                showEditModal={showEditModal}
+                onToggleSnackBar={onToggleSnackBar}
+              />
+            ))}
+          </ScrollView>
+          <FAB
+            icon={require('../../assets/plus.png')}
+            style={styles.fab}
+            onPress={showModal}
           />
         </View>
-        <ScrollView contentContainerStyle={styles.content}>
-          {detailTask.map((item: any) => (
-            <DetailTaskCard
-              item={item}
-              handleSelected={handleSelected}
-              checked={item.is_complete}
-              setChecked={setChecked}
-              showEditModal={showEditModal}
-              onToggleSnackBar={onToggleSnackBar}
-            />
-          ))}
-        </ScrollView>
-        <FAB
-          icon={require('../../assets/plus.png')}
-          style={styles.fab}
-          onPress={showModal}
-        />
-      </View>
+      ) : (
+        <PokeLoader />
+      )}
       <Snackbar
         visible={snackVisible}
         onDismiss={onDismissSnackBar}

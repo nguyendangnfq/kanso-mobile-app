@@ -146,12 +146,8 @@ export const detailTaskSlice = createSlice({
 
     // change complete
     builder
-      .addCase(changeCompletedDetailTaskAsync.pending, state => {
-        state.loading = true;
-      })
-      .addCase(changeCompletedDetailTaskAsync.rejected, state => {
-        state.loading = false;
-      })
+      .addCase(changeCompletedDetailTaskAsync.pending, state => {})
+      .addCase(changeCompletedDetailTaskAsync.rejected, state => {})
       .addCase(changeCompletedDetailTaskAsync.fulfilled, (state, action) => {
         state.loading = false;
         console.log(action.payload);
