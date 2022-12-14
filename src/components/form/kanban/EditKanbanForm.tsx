@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { Controller, useForm } from 'react-hook-form';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SegmentedButtons, Switch } from 'react-native-paper';
 import Button from '../../Button';
 import moment from 'moment';
-import MultiSelect from 'react-native-multiple-select';
-import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-date-picker';
+import { Picker } from '@react-native-picker/picker';
 
 type EditKanbanFormProps = {
   onSubmit: (value: any) => void;
@@ -21,13 +20,6 @@ const EditKanbanForm = (props: EditKanbanFormProps) => {
   const [openEndDate, setOpenEndDate] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-
-  const parentData = boardData.map((item: any) => {
-    return {
-      label: item.title,
-      value: item.id_job,
-    };
-  });
 
   const {
     control,
@@ -175,26 +167,21 @@ const EditKanbanForm = (props: EditKanbanFormProps) => {
         )}
       </View>
 
-      {/* <View>
+      <View>
         <Text style={styles.label}>Parent Job</Text>
         <Controller
           control={control}
           render={({ field: { onChange, value } }) => (
-            <RNPickerSelect
-              placeholder={{
-                label: 'Not Available',
-                value: 'not',
-                color: '#9EA0A4',
-              }}
-              items={parentData}
-              onValueChange={onChange}
-              value={value}
-              style={pickerSelectStyles}
-            />
+            <Picker selectedValue={value} onValueChange={onChange}>
+              <Picker.Item label="Not Available" value="not" />
+              {boardData.map((item: any) => (
+                <Picker.Item label={item.title} value={item.id_job} />
+              ))}
+            </Picker>
           )}
           name="parent"
         />
-      </View> */}
+      </View>
 
       <Button mode="contained" onPress={handleSubmit(onSubmit)}>
         Modify
@@ -236,27 +223,5 @@ const styles = StyleSheet.create({
   },
   textError: {
     color: 'red',
-  },
-});
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
