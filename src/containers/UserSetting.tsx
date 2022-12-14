@@ -12,8 +12,9 @@ import Logo from './../components/Logo';
 import { emailValidator } from '../helpers/emailValidator';
 import { displayNameValidator } from '../helpers/displayNameValidator';
 import { editUser } from '../store/user/userSettingSlice';
+import { logout } from '../store/user/loginSlice';
 
-const UserSetting = () => {
+const UserSetting = ({ navigation }: any) => {
   const profile = useAppSelector(state => state?.userSetting);
 
   const [displayName, setDisplayName] = useState({
@@ -30,7 +31,10 @@ const UserSetting = () => {
   const vice_token = useAppSelector(state => state.register.token);
   const dispatch = useAppDispatch();
 
-  // console.log(profile);
+  const handleLogout = () => {
+    dispatch(logout());
+    navigation.replace('Login');
+  };
 
   const onEditUser = async () => {
     try {
@@ -107,9 +111,12 @@ const UserSetting = () => {
           <Button
             mode="contained"
             onPress={onEditUser}
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 16 }}
           >
             Saved Profile
+          </Button>
+          <Button mode="outlined" onPress={handleLogout}>
+            Log out
           </Button>
         </Background>
       )}

@@ -25,7 +25,9 @@ const initialState: LoginState = {
 export const LoginSlice = createSlice({
   name: 'login',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: () => initialState,
+  },
   extraReducers: builder => {
     builder
       .addCase(login.pending, state => {
@@ -59,4 +61,5 @@ export const LoginSlice = createSlice({
   },
 });
 
+export const { logout } = LoginSlice.actions;
 export default LoginSlice.reducer;
