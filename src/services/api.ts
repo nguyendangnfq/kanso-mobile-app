@@ -6,3 +6,11 @@ export const instance = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+export const secondInstance = axios.create({
+  baseURL: 'https://server-kanso.herokuapp.com',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});

@@ -1,2 +1,2 @@
-# pokemon-app
-React Native practice with API
+# kanso-mobile-app
+React Native Thesis Project
